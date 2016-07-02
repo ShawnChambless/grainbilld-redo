@@ -2,7 +2,6 @@ var gulp        = require( 'gulp' ),
     prefix      = require( 'gulp-autoprefixer' ),
     concat      = require( 'gulp-concat' ),
     bulkSass    = require( 'gulp-cssimport' ),
-    jade        = require( 'gulp-jade' ),
     annotate    = require( 'gulp-ng-annotate' ),
     plumber     = require( 'gulp-plumber' ),
     sass        = require( 'gulp-sass' ),
@@ -11,36 +10,28 @@ var gulp        = require( 'gulp' ),
     watch       = require( 'gulp-watch' ),
     rename      = require( 'gulp-rename' ),
     paths = {
-        jade: ['public/**/*.jade'],
-        sass: ['public/styles/**/*.sass', 'public/styles/**/*.scss', '!./public/styles/main.sass'],
-        scripts: ['public/app/**/*.js', '!./public/app/scripts.min.js']
+        sass: ['public/node_modules/bootstrap/dist/css/bootstrap-theme.css', 'public/styles/**/*.scss'],
+        scripts: [
+          'public/node_modules/jquery/dist/jquery.js',
+          'public/node_modules/bootstrap/dist/js/bootstrap.js',
+          'public/node_modules/angular/angular.js',
+          'public/node_modules/angular-ui-router/release/angular-ui-router.js',
+          'public/app/**/*.js'
+        ]
     };
-
-gulp.task('jade', function(done) {
-    gulp.src(paths.jade)
-        .pipe(plumber())
-        .pipe(jade({
-            pretty: true
-        }))
-        .pipe(gulp.dest('./public'))
-        .on('end', done);
-});
 
 gulp.task('sass', function(done) {
     gulp.src('public/styles/main.sass')
         .pipe(plumber())
         .pipe(bulkSass())
         .pipe(sass({outputStyle: 'expanded'}))
-        .pipe(prefix('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
-        .pipe(gulp.dest('./public/styles/'))
-        .pipe(compressCss({
-            expandVars: true,
-            uglyComments: true
-        }))
+        .pipe(prefix())
+        .pipe(gulp.dest('./public/src/styles/'))
+        .pipe(compressCss())
         .pipe(rename(function (path) {
-            path.extname = "-min.css";
+            path.extname = ".min.css";
         }))
-        .pipe(gulp.dest('public/styles/'))
+        .pipe(gulp.dest('./public/dist/styles/'))
         .on('end', done);
 });
 
@@ -48,17 +39,19 @@ gulp.task('minifyJS', function(done) {
     gulp.src(paths.scripts)
         .pipe(plumber())
         .pipe(annotate())
-        .pipe(concat('scripts.min.js'))
-        // .pipe(uglify())
-        .pipe(gulp.dest('public/app'))
+        .pipe(gulp.dest('./public/src/app/'))
+        .pipe(concat('scripts.js'))
+        .pipe(uglify())
+        .pipe(rename(function (path) {
+            path.extname = ".min.js";
+        }))
+        .pipe(gulp.dest('./public/dist/app'))
         .on('end', done);
 });
 
 gulp.task('watch', function() {
-    gulp.watch(paths.jade, ['jade']);
     gulp.watch(paths.sass, ['sass']);
     gulp.watch(paths.scripts, ['minifyJS']);
-    gulp.watch('public/index.html');
 });
 
-gulp.task('default', ['jade', 'sass', 'minifyJS', 'watch']);
+gulp.task('default', ['sass', 'minifyJS', 'watch']);
