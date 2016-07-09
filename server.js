@@ -61,12 +61,15 @@ app
     .get(    '/api/database/ingredients/hops',       hopsCtrl.getHops)
     .post(   '/api/database/ingredients/hops',       hopsCtrl.addHops)
     .get(    '/api/database/ingredients/yeast',      yeastCtrl.getYeast)
-    .post(   '/api/database/ingredients/yeast',      yeastCtrl.addYeast);
+    .post(   '/api/database/ingredients/yeast',      yeastCtrl.addYeast)
+    .get(    '/api/database/ingredients/all',        recipeCtrl.getAllIngredients);
+
 mongoose
     .set('debug', true)
     .connect('mongodb://localhost:27017/grainbilld', function() {
     console.log('Mongo is also Listening');
 });
+
 httpServer.listen(port, function() {
     console.log('Listening with httpServer on:', port);
 });

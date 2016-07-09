@@ -1,6 +1,10 @@
 var mongoose = require('mongoose'),
     User     = mongoose.model('User', require('../models/userModel')),
-    Recipe   = mongoose.model('Recipe', require('../models/recipeModel'));
+    Grain    = mongoose.model('Grain', require('../models/grainModel')),
+    Hops     = mongoose.model('Hops', require('../models/hopsModel')),
+    Yeast    = mongoose.model('Yeast', require('../models/yeastModel')),
+    Recipe   = mongoose.model('Recipe', require('../models/recipeModel')),
+    AllIngredients = mongoose.model('AllIngredients', require('../models/allIngredientsModel'));
 
 module.exports = {
 
@@ -20,6 +24,25 @@ module.exports = {
         });
     },
 
+    getAllIngredients: function(req, res) {
+
+            Grain.find(function(err, grain) {
+                if(err) return res.status(500).json(err);
+
+                Hops.find(function(err2, hops) {
+                    if(err2) return res.status(500).json(err2);
+
+                    Yeast.find(function(err3, yeast) {
+                        if(err3) return res.status(500).json(err3);
+
+                        return res.status(200).json({ grain: grain, hops: hops, yeast: yeast });
+                    });
+
+
+                });
+            })
+    },
+
     getCommunityRecipes: function(req, res) {
         Recipe.find({})
         .where('isPrivate').equals(false)
@@ -32,7 +55,7 @@ module.exports = {
     getLatestCommunityRecipes: function(req, res) {
         Recipe.find({})
         .where('isPrivate').equals(false)
-        .sort( ['dateCreated', 'Ascending'] )
+        .sort( 'dateCreated' )
         .limit(5)
         .exec(function(err, recipes) {
             if(err) return res.status(500).json(err);

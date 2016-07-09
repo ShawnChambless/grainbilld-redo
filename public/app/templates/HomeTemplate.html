@@ -1,0 +1,39 @@
+<md-subheader class="md-primary">
+    <h1>
+        5 recent beers
+    </h1>
+</md-subheader>
+
+<md-content class="md-padding" layout-xs="column" layout="row" ng-cloak>
+    <div flex-xs flex-gt-xs="50" layout="column">
+        <md-card ng-repeat="beer in latestCommunity | orderBy: 'createdDate' track by $index">
+            <md-card-title-text>
+                <span class="md-headline">{{beer.name}}</span>
+            </md-card-title-text>
+            <img ng-src="{{imagePath}}" ng-if="beer.image" class="md-card-image" alt="Washed Out">
+            <ng-md-icon icon='photo' ng-if="!beer.image" style="fill: teal" size="300"></ng-md-icon>
+            <md-card-title>
+
+            </md-card-title>
+            <md-card-content>
+                <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                </p>
+                <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                </p>
+                <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                </p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button>Action 1</md-button>
+                <md-button>Action 2</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+</md-content>
+

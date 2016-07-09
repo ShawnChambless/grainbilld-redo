@@ -1,15 +1,44 @@
-angular.module('GrainBilld', ['ui.router'])
+angular.module('GrainBilld', ['ui.router', 'ngMaterial', 'ngAnimate'])
 
-.config(function($stateProvider, $urlRouterProvider) {
+.run(function() {
+	if ('addEventListener' in document) {
+	    document.addEventListener('DOMContentLoaded', function() {
+	        FastClick.attach(document.body);
+	    }, false);
+	}
+})
 
-  $urlRouterProvider.otherwise('/Home');
+.config(function($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider) {
 
-  $stateProvider
+	$mdThemingProvider
+		.theme('default')
+		.primaryPalette('light-blue')
+		.accentPalette('teal', {
+			'default': '300'
+		})
+		.warnPalette('red');
 
-    .state('home', {
-      url: '/Home',
-      controller: 'HomeController',
-      templateUrl: 'app/templates/HomeTemplate.html'
-    });
+	$urlRouterProvider.otherwise('/Home');
+
+	$stateProvider
+
+		.state('home', {
+		  url: '/Home',
+		  controller: 'HomeController as cnt',
+		  template: '<home-dir></home-dir>'
+		})
+		.state('newBeer', {
+			url: '/NewBeer',
+			controller: 'NewBeerController as cnt',
+			template: '<new-beer-dir></new-beer-dir>',
+			resolve: {
+				getIngredients: function(RecipeService) {
+					return RecipeService.getAllIngredients().then(function(data) {
+						return data.data;
+
+					});
+				}
+			}
+		});
 
 });
