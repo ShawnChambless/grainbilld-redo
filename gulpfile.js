@@ -4,7 +4,6 @@ var gulp        = require( 'gulp' ),
     annotate    = require( 'gulp-ng-annotate' ),
     plumber     = require( 'gulp-plumber' ),
     sass        = require( 'gulp-sass' ),
-    compressCss = require( 'gulp-uglifycss' ),
     uglify      = require( 'gulp-uglify' ),
     watch       = require( 'gulp-watch' ),
     rename      = require( 'gulp-rename' ),
@@ -27,7 +26,8 @@ var gulp        = require( 'gulp' ),
 
 gulp.task('scss', function(done) {
     gulp.src('public/app/styles/Main.scss')
-        .pipe(sass({ outputStyle: 'compressed' }))
+        .pipe(sass({ outputStyle: 'compressed' })
+            .on('error', sass.logError))
         .pipe(prefix())
         .pipe(gulp.dest('public/dist/styles'))
         .on('end', done);

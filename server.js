@@ -9,11 +9,16 @@ var express     = require( 'express' ),
     grainCtrl   = require( './api/controllers/grainCtrl' ),
     hopsCtrl    = require( './api/controllers/hopsCtrl' ),
     yeastCtrl   = require( './api/controllers/yeastCtrl' ),
-    http        = require( 'http' ),
+    ingredientCtrl = require('./api/controllers/ingredientCtrl'),
     moment      = require( 'moment' ),
     port        = process.argv[2] || 8080,
-    app         = express(),
-    httpServer  = http.createServer(app);
+    app         = express();
+
+mongoose
+    .set('debug', true)
+    .connect('mongodb://localhost:27017/grainbilld', function() {
+        console.log('Mongo is also Listening');
+    });
 
 app
     .use(compression())
@@ -62,14 +67,13 @@ app
     .post(   '/api/database/ingredients/hops',       hopsCtrl.addHops)
     .get(    '/api/database/ingredients/yeast',      yeastCtrl.getYeast)
     .post(   '/api/database/ingredients/yeast',      yeastCtrl.addYeast)
-    .get(    '/api/database/ingredients/all',        recipeCtrl.getAllIngredients);
+    .get(    '/api/database/ingredients/all',        ingredientCtrl.getAllIngredients)
 
-mongoose
-    .set('debug', true)
-    .connect('mongodb://localhost:27017/grainbilld', function() {
-    console.log('Mongo is also Listening');
-});
 
-httpServer.listen(port, function() {
-    console.log('Listening with httpServer on:', port);
-});
+    .listen(port, function() {
+        console.log('Listening on:', port);
+    });
+
+
+
+

@@ -3,18 +3,18 @@ var mongoose = require('mongoose'),
 
 module.exports = {
     addGrain: function(req, res) {
-        newGrain = new Grain(req.body);
+        var newGrain = new Grain(req.body);
         newGrain.save(function(err, resp) {
-            if(err) return res.sendStatus(500, err);
-                return res.json(resp);
+            if(err) return res.status(500).json(err);
+                return res.status(200).json(resp);
         });
     },
 
     getGrain: function(req, res) {
         Grain.find(req.query)
         .exec(function(err, resp) {
-            if(err) return res.sendStatus(500);
-                return res.json(resp);
+            if(err) return res.status(500).json(err);
+                return res.status(200).json(resp);
         });
     },
 
