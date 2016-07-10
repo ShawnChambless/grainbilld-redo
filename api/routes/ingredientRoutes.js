@@ -3,7 +3,7 @@ var express             = require('express'),
     GrainCtrl           = require( './../controllers/GrainCtrl' ),
     HopsCtrl            = require( './../controllers/HopsCtrl' ),
     YeastCtrl           = require( './../controllers/YeastCtrl' ),
-    IngredientCtrl      = require('./../controllers/IngredientCtrl');
+    IngredientCtrl      = require( './../controllers/IngredientCtrl' );
 
 IngredientRouter
     .get ( '/grain',        GrainCtrl.getGrain)
