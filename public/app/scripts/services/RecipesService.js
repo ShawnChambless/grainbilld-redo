@@ -38,7 +38,7 @@ angular.module('GrainBilld')
 		};
 
 		this.getAllIngredients = function() {
-			return $http.get('/api/database/ingredients/all');
+			return $http.get('/api/ingredients/all');
 		};
 
 		function editGrainInRecipe(grain) {

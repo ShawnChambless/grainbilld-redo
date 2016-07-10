@@ -10,6 +10,7 @@
     "dev": "concurrently \"npm run gulp\" \"npm run db\" \"npm run serve\"",
     "start": "npm run dev"
   },
+  "jshintConfig": {  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ShawnChambless/grainbilld2.git"

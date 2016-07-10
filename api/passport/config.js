@@ -1,6 +1,6 @@
 var passport          = require( 'passport' ) ,
     LocalStrategy     = require( 'passport-local' ).Strategy ,
-    userCtrl          = require( '../controllers/userCtrl.js' ) ,
+    userCtrl          = require( '../controllers/UserCtrl.js' ) ,
     mongoose          = require( 'mongoose' ) ,
     User              = mongoose.model('User', require('../models/userModel.js')) ,
     bcrypt            = require( 'bcryptjs' ) ,
