@@ -1,78 +1,62 @@
-(function () {
-    "use strict";
+(function() {
+	"use strict";
 
-angular.module('GrainBilld')
-    .controller('NewBeerController', function($scope, RecipeService, getIngredients, $rootScope, $state, $timeout) {
+	angular
+			.module('GrainBilld')
+			.controller('NewBeerController', newBeerController);
 
-        console.log(getIngredients)
+	newBeerController.$inject = [ 'RecipeService', 'getIngredients', '$timeout' ];
 
-        $scope.grainInDb        = getIngredients.grain;
-        $scope.hopsInDb         = getIngredients.hops;
-        $scope.yeastInDb        = getIngredients.yeast;
-        $scope.grainInRecipe    = RecipeService.grainInRecipe;
-        $scope.hopsInRecipe     = RecipeService.hopsInRecipe;
-        $scope.yeastInRecipe    = RecipeService.yeastInRecipe;
-        $scope.grainValues      = RecipeService.grainValues;
-        $scope.hopsValues       = RecipeService.hopsValues;
-        $scope.yeastValues      = RecipeService.yeastValues;
-        $scope.grains           = 'grain';
-        $scope.hopss            = 'hops';
-        $scope.yeasts           = 'yeast';
-        $scope.recipe           = {};
-        $scope.recipe.isPrivate = true;
+	function newBeerController(RecipeService, getIngredients, $timeout) {
 
-        $scope.showGrainData = function() {
-            $scope.showGrain    = true;
-            $scope.showHops     = false;
-            $scope.showYeast    = false;
-        };
+		var cnt = this;
 
-        $scope.showHopsData = function() {
-            $scope.showGrain  = false;
-            $scope.showHops   = true;
-            $scope.showYeast  = false;
-        };
+		function init() {
+			console.log(getIngredients);
 
-        $scope.showYeastData = function() {
-            $scope.showGrain    = false;
-            $scope.showHops     = false;
-            $scope.showYeast    = true;
-        };
+			cnt.ingredientToShow = [];
+			cnt.grainInDb        = getIngredients.grain;
+			cnt.hopsInDb         = getIngredients.hops;
+			cnt.yeastInDb        = getIngredients.yeast;
+			cnt.grainInRecipe    = RecipeService.grainInRecipe;
+			cnt.hopsInRecipe     = RecipeService.hopsInRecipe;
+			cnt.yeastInRecipe    = RecipeService.yeastInRecipe;
+			cnt.grainValues      = RecipeService.grainValues;
+			cnt.hopsValues       = RecipeService.hopsValues;
+			cnt.yeastValues      = RecipeService.yeastValues;
+			cnt.recipe           = {};
+			cnt.recipe.isPrivate = true;
 
-        $scope.removeGrain = function(index) {
-            RecipeService.grainInRecipe.splice(index, 1);
-        };
+			cnt.removeGrain      = removeGrain;
+			cnt.removeHops       = removeHops;
+			cnt.removeYeast      = removeYeast;
+			cnt.saveRecipeToUser = saveRecipeToUser;
 
-        $scope.removeHops = function(index) {
-            RecipeService.hopsInRecipe.splice(index, 1);
-        };
+		}
 
-        $scope.removeYeast = function(index) {
-            RecipeService.yeastInRecipe.splice(index, 1);
-        };
+		init();
 
-        $scope.saveRecipeToUser = function(recipe) {
-            var user = $scope.currentUser.id;
-            RecipeService.saveRecipeToUser(recipe, user).then(function(resp) {
-                console.log(resp);
-                $scope.response = resp;
-                var flashSuccess = document.getElementById('flashSuccess');
-                flashSuccess.classList.toggle('active');
-                $timeout(function() {
-                    flashSuccess.classList.toggle('active');
-                }, 3000);
-                $scope.showGrain = $scope.showHops = $scope.showYeast = false;
-                $scope.recipe = {}; $scope.grainInRecipe = RecipeService.grainInRecipe; $scope.hopsInRecipe = RecipeService.hopsInRecipe; $scope.yeastInRecipe = RecipeService.yeastInRecipe; $scope.grainValues = RecipeService.grainValues; $scope.hopsValues = RecipeService.hopsValues; $scope.yeastValues = RecipeService.yeastValues; $scope.recipe.isPrivate = true;
-            }, function(err) {
-                var flashError = document.getElementById('flashError');
-                flashError.classList.toggle('active');
-                $timeout(function() {
-                    flashError.classList.toggle('active');
-                }, 3000);
-            });
-        };
+		function removeGrain(index) {
+			RecipeService.grainInRecipe.splice(index, 1);
+		}
 
-    });
+		function removeHops(index) {
+			RecipeService.hopsInRecipe.splice(index, 1);
+		}
+
+		function removeYeast(index) {
+			RecipeService.yeastInRecipe.splice(index, 1);
+		}
+
+		function saveRecipeToUser(recipe) {
+			var user = $scope.currentUser.id;
+			RecipeService.saveRecipeToUser(recipe, user).then(function(resp) {
+				console.log(resp);
+			});
+		}
+
+		return cnt;
+	}
 
 }());
 

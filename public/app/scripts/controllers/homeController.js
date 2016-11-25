@@ -1,22 +1,32 @@
 (function() {
 	'use strict';
 
-	angular.module('GrainBilld')
-	.controller('HomeController', function($scope, HomeService, RecipeService) {
+	angular
+			.module('GrainBilld')
+			.controller('HomeController', homeController);
 
-		var $parent = this;
+	homeController.$inject = [ 'HomeService', 'RecipeService' ];
 
-		$parent.init = function() {
-			$parent.getLatestCommunity();
-		};
+	function homeController(HomeService, RecipeService) {
 
-		$parent.getLatestCommunity = function() {
+		var cnt = this;
+
+		function init() {
+			cnt.getLatestCommunity = getLatestCommunity;
+
+			cnt.getLatestCommunity();
+		}
+
+		init();
+
+
+		function getLatestCommunity() {
 			RecipeService.getLatestCommunity().then(function(data) {
-				$scope.latestCommunity =  data;
+				$scope.latestCommunity = data;
 			});
-		};
+		}
 
-		$parent.init();
-		
-	});
+		return cnt;
+
+	}
 }());

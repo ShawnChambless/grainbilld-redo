@@ -19,6 +19,7 @@ angular.module('GrainBilld', [ 'ui.router' ])
 						controller: 'HomeController as cnt',
 						templateUrl: 'app/templates/home.template.html'
 					})
+
 					.state('newBeer', {
 						url: '/NewBeer',
 						controller: 'NewBeerController as cnt',

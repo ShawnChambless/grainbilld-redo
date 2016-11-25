@@ -1,20 +1,20 @@
-const gulp     = require('gulp'),
-		prefix   = require('gulp-autoprefixer'),
-		concat   = require('gulp-concat'),
-		annotate = require('gulp-ng-annotate'),
-		plumber  = require('gulp-plumber'),
-		sass     = require('gulp-sass'),
-		uglify   = require('gulp-uglify'),
-		watch    = require('gulp-watch'),
-		rename   = require('gulp-rename'),
-		paths    = {
-			scss: [ 'public/app/styles/**/*.scss' ],
-			scripts: [
-				'public/node_modules/jquery/dist/jquery.js',
-				'public/node_modules/fastclick/lib/fastclick.js',
-				'public/node_modules/angular/angular.js',
-				'public/node_modules/angular-ui-router/release/angular-ui-router.js',
-				'public/app/**/*.js'
+const gulp     = require('gulp')
+		,	prefix   = require('gulp-autoprefixer')
+		,	concat   = require('gulp-concat')
+		,	plumber  = require('gulp-plumber')
+		,	sass     = require('gulp-sass')
+		,	uglify   = require('gulp-uglify')
+		,	watch    = require('gulp-watch')
+		,	rename   = require('gulp-rename')
+		,	paths    = {
+			scss: [ 'public/app/styles/**/*.scss' ]
+			,	scripts: [
+				'public/node_modules/jquery/dist/jquery.js'
+				, 'public/node_modules/materialize-css/dist/js/materialize.js'
+				, 'public/node_modules/fastclick/lib/fastclick.js'
+				, 'public/node_modules/angular/angular.js'
+				, 'public/node_modules/angular-ui-router/release/angular-ui-router.js'
+				, 'public/app/**/*.js'
 			]
 		};
 
@@ -31,7 +31,6 @@ gulp
 			return gulp.src(paths.scripts)
 					.pipe(plumber())
 					.pipe(concat('scripts.min.js'))
-					.pipe(annotate())
 					// .pipe(uglify())
 					.pipe(gulp.dest('./public/dist/app'));
 		})
