@@ -1,8 +1,15 @@
-angular.module('GrainBilld')
-.factory('HomeService', function($http) {
-  return {
+(function() {
+	'use strict';
 
-    
+	angular
+			.module('GrainBilld')
+			.factory('HomeService', homeService);
 
-  };
-});
+	homeService.$inject = [ '$http' ];
+
+	function homeService($http) {
+		return {};
+	}
+
+}());
+
