@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "jshintConfig": {
-    "globals": { "angular": false }
+    "globals": {
+      "angular": false
+    }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,10 +16,8 @@
   "dependencies": {
     "angular": "^1.5.7",
     "angular-animate": "^1.5.7",
-    "angular-aria": "^1.5.7",
-    "angular-material": "^1.1.0-rc.5",
-    "angular-material-icons": "^0.7.0",
     "angular-ui-router": "^0.3.1",
-    "fastclick": "^1.0.6"
+    "fastclick": "^1.0.6",
+    "jquery": "^3.1.1"
   }
 }
