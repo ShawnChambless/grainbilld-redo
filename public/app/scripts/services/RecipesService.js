@@ -11,11 +11,15 @@
 
 		return {
 			recipe: {
-				grain: []
+				name: ''
+				, size: 0
+				, grain: []
 				, hops: []
 				, yeast: []
-				, name: ''
-				, size: 0
+				, ibu: 0
+				, srm: 0
+				, og: 0
+				, fg: 0
 			}
 			, Grain: Grain
 			, Hops: Hops
@@ -26,15 +30,13 @@
 			, saveRecipeToUser: saveRecipeToUser
 		};
 
-		function Grain(og, fg, srm) {
-			this.og  = og;
-			this.fg  = fg;
+		function Grain(srm) {
 			this.srm = srm;
 		}
 
-		function Hops(ibu, boilTime) {
-			this.ibu      = ibu;
-			this.boilTime = boilTime;
+		function Hops(alphaAcid, boilTime) {
+			this.alphaAcid = alphaAcid;
+			this.boilTime  = boilTime;
 		}
 
 		function Yeast(attenuation) {
