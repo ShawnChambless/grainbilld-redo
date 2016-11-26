@@ -1,52 +1,119 @@
 <div class="row">
   <form class="col s12">
     <div class="row">
-      <div class="input-field col s8">
+      <div class="input-field col s7">
         <label for="name">Recipe Name</label>
         <input type="text" id="name" class="validate" ng-model="recipe.name" />
       </div>
-      <div class="input-field col s4">
+      <div class="input-field col s3">
         <input type="number" id="batchSize" ng-model="recipe.batchSize" />
         <label for="batchSize">Batch Size</label>
       </div>
+      <div class="input-field col s2">
+        <input type="checkbox" class="with-gap" ng-model="cnt.recipe.isPrivate" ng-true-value="true" ng-false-value="false" id="privateCheckbox" />
+        <label for="privateCheckbox">Private?</label>
+      </div>
+
     </div>
+
+    <div class="row">
+      <header>
+        <h5 class="header">
+          Ingredients
+        </h5>
+      </header>
+
+      <div class="col s4">
+        <header>
+          <h6 class="header">
+              Grain
+            </h6>
+        </header>
+
+        <div ng-if="cnt.recipe.grain.length">
+          <div class="chip" ng-repeat="grain in cnt.recipe.grain">{{grain.amount}}lbs {{grain.name}}
+            <i class="close material-icons">close</i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s4">
+        <header>
+          <h6 class="header">
+              Hops
+            </h6>
+        </header>
+
+        <div ng-if="cnt.recipe.hops.length">
+          <div class="chip" ng-repeat="hops in cnt.recipe.hops">{{hops.amount}}oz {{hops.boilTime}}mins {{hops.name}}
+            <i class="close material-icons">close</i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s4">
+        <header>
+          <h6 class="header">
+              Yeast
+            </h6>
+        </header>
+
+        <div ng-if="cnt.recipe.yeast.length">
+          <div class="chip" ng-repeat="yeast in cnt.recipe.yeast">{{yeast.name}}
+          <i class="close material-icons">close</i></div>
+        </div>
+
+      </div>
+
+    </div>
+
+
   </form>
 </div>
 
-<a id="grain" class="waves-effect waves-light btn light-blue lighten-1" type="submit" ng-click="showGrainData()">Grain</a>
-<a id="hops" class="waves-effect waves-light btn light-blue lighten-1" type="submit" ng-click="showHopsData()">Hops</a>
-<a id="yeast" class="waves-effect waves-light btn light-blue lighten-1" type="submit" ng-click="showYeastData()">Yeast</a>
+<a id="grain" class="waves-effect waves-light btn light-blue lighten-1" ng-click="cnt.showGrainData()">Grain</a>
+<a id="hops" class="waves-effect waves-light btn light-blue lighten-1" ng-click="cnt.showHopsData()">Hops</a>
+<a id="yeast" class="waves-effect waves-light btn light-blue lighten-1" ng-click="cnt.showYeastData()">Yeast</a>
 
+<div class="row" ng-if="cnt.ingredientToShow.name == 'grain'">
 
-<div ng-show="recipe.name" class="recipe title">Title: {{ recipe.name }}</div>
-<div ng-show="yeastValues.abv" class="recipe abv">ABV: {{ yeastValues.abv }}</div>
-<div ng-show="grainValues.srm" class="recipe srm">SRM: {{ grainValues.srm }}</div>
-<div ng-show="hopsValues.ibu" class="recipe ibu">IBU: {{ hopsValues.ibu }}</div>
-<div ng-show="grainValues.og" class="recipe og">OG: {{ grainValues.og }}</div>
-<div ng-show="grainValues.fg" class="recipe fg">FG: {{ grainValues.fg }}</div>
-<p>
-  <input type="checkbox" class="with-gap" ng-model="recipe.isPrivate" ng-true-value="true" ng-false-value="false" id="privateCheckbox" />
-  <label for="privateCheckbox">Private?</label>
-</p>
-<input type="submit" value="Save" ng-click="saveRecipeToUser(recipe, recipe.isPrivate)" ng-if="grainValues.fg && recipe.name && currentUser" class="saveRecipeBtn" />
-<div class="module ingredientData">
-  <input ng-show="showGrain" type="text" ng-model="ingredientFilter" placeholder="Filter grain..." />
-  <input ng-show="showGrain" type="number" ng-model="grain.amount" placeholder="Pounds of grain..." />
-  <input ng-show="showHops" type="text" ng-model="ingredientFilter" placeholder="Filter hops..." />
-  <input ng-show="showHops" type="number" ng-model="hops.boilTime" placeholder="Boil time..." />
-  <input ng-show="showYeast" type="text" ng-model="ingredientFilter" placeholder="Filter yeast..." />
-  <ul class="collection">
-      <li class="collection-item" ng-repeat="ingredient in ingredientToShow">{{ingredient.name}}</li>
-  </ul>
-</div>
-<div class="module recipeData">
-  <div class="recipe ingredients">
-    <div ng-repeat="grain in grainInRecipe" class="ingredient grain">{{grain.name}}<span ng-click="removeGrain($index)" class="remove"> <i class="fa fa-trash-o"></i></span>
-    </div>
-    <div ng-repeat="hops in hopsInRecipe" class="ingredient hops">{{hops.name}}<span ng-click="removeHops($index)" class="remove"> <i class="fa fa-trash-o"></i></span>
-    </div>
-    <div ng-repeat="yeast in yeastInRecipe" class="ingredient yeast">{{yeast.name}}<span ng-click="removeYeast($index)" class="remove"> <i class="fa fa-trash-o"></i></span>
-    </div>
+  <div class="input-field col s6">
+    <input id="grainFilter" type="text" ng-model="ingredientFilter" />
+    <label for="grainFilter">Filter grain</label>
   </div>
+
+  <div class="input-field col s6">
+    <input id="pounds" type="number" ng-model="cnt.grain.amount" />
+    <label for="pounds">How much?</label>
+  </div>
+
 </div>
+
+<div class="row" ng-if="cnt.ingredientToShow.name == 'hops'">
+
+  <div class="input-field col s4">
+    <input id="hopsFilter" type="text" ng-model="ingredientFilter" />
+    <label for="hopsFilter">Filter hops</label>
+  </div>
+
+  <div class="input-field col s4">
+    <input id="hopsAmount" type="number" ng-model="cnt.hops.amount">
+    <label for="hopsAmount">How much?</label>
+  </div>
+
+  <div class="input-field col s4">
+    <input id="boilTime" type="number" ng-model="cnt.hops.boilTime" />
+    <label for="boilTime">Boil time</label>
+  </div>
+
 </div>
+
+
+<div class="input-field" ng-if="cnt.ingredientToShow.name == 'yeast'">
+  <input id="yeastFilter" type="text" ng-model="ingredientFilter" />
+  <label for="yeastFilter">Filter yeast</label>
+</div>
+
+<ul class="collection" ng-show="cnt.ingredientToShow.name">
+  <li class="collection-item" ng-repeat="ingredient in cnt.ingredientToShow.arr" ng-click="cnt.addIngredient(ingredient)">{{ingredient.name}}</li>
+</ul>
