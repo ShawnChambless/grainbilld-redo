@@ -8,19 +8,21 @@
 	recipeService.$inject = [ '$http' ];
 
 	function recipeService($http) {
+		var recipe = {
+			name: ''
+			, size: 5
+			, grain: []
+			, hops: []
+			, yeast: []
+			, ibu: 0
+			, srm: 0
+			, og: 0
+			, fg: 0
+			, efficiency: 0.75
+		};
 
 		return {
-			recipe: {
-				name: ''
-				, size: 0
-				, grain: []
-				, hops: []
-				, yeast: []
-				, ibu: 0
-				, srm: 0
-				, og: 0
-				, fg: 0
-			}
+			recipe: recipe
 			, Grain: Grain
 			, Hops: Hops
 			, Yeast: Yeast
@@ -30,16 +32,22 @@
 			, saveRecipeToUser: saveRecipeToUser
 		};
 
-		function Grain(srm) {
-			this.srm = srm;
+		function Grain(name, lovibond, sg, amount) {
+			this.name     = name;
+			this.amount   = amount;
+			this.lovibond = lovibond;
+			this.sg       = sg;
 		}
 
-		function Hops(alphaAcid, boilTime) {
+		function Hops(name, alphaAcid, boilTime, amount) {
+			this.name      = name;
+			this.amount    = amount;
 			this.alphaAcid = alphaAcid;
 			this.boilTime  = boilTime;
 		}
 
-		function Yeast(attenuation) {
+		function Yeast(name, attenuation) {
+			this.name        = name;
 			this.attenuation = attenuation;
 		}
 
@@ -53,13 +61,13 @@
 		function addIngredient(ingredientType, ingredient) {
 			switch (ingredientType) {
 				case 'grain':
-					editGrainInRecipe(ingredient);
+					addGrainToRecipe(new Grain(ingredient.name, ingredient.amount, ingredient.lovibond, ingredient.sg));
 					break;
 				case 'hops':
-					editHopsInRecipe(ingredient);
+					addHopsToRecipe(new Hops(ingredient.hops.name, ingredient.amount, ingredient.hops.alphaAcid, ingredient.boilTime));
 					break;
 				case 'yeast':
-					editYeastInRecipe(ingredient);
+					addYeastToRecipe(new Yeast(ingredient.hops.name, ingredient.hops.attenuation));
 					break;
 			}
 		}
@@ -68,57 +76,39 @@
 			return $http.get('/api/ingredients/all');
 		}
 
-		function editGrainInRecipe(grain) {
-			grainInRecipe.push({
-				name: grain.name,
-				lovibond: grain.lovibond,
-				sg: ((grain.sg - 1) * 1000).toFixed(1),
-				amount: 5,
-				description: grain.description
-			});
+		function addGrainToRecipe(grain) {
+			recipe.grain.push(grain);
 			calcGrainTotals();
 		}
 
-		function editHopsInRecipe(hops) {
-			hopsInRecipe.push({
-				name: hops.name,
-				alphaAcid: (hops.alphaAcid / 100),
-				amount: 1,
-				boilTime: 10,
-				description: hops.description
-			});
+		function addHopsToRecipe(hops) {
+			recipe.hops.push(hops);
 			calcHopsTotals();
 		}
 
-		function editYeastInRecipe(yeast) {
-			yeastInRecipe.push({
-				name: yeast.name,
-				attenuation: ((yeast.minimumAttenuation + yeast.maximumAttenuation) / 2),
-				description: yeast.description
-			});
+		function addYeastToRecipe(yeast) {
+			recipe.yeast.push(yeast);
 			calcYeastTotals();
 		}
 
 		function calcGrainTotals() {
-			var efficiency  = 0.75;
-			var batchSize   = 5;
-			grainValues.og  = calcOG(batchSize, efficiency);
-			grainValues.srm = calcSRM(batchSize);
+			recipe.og  = calcOG(recipe.size, recipe.efficiency);
+			recipe.srm = calcSRM(recipe.size);
 		}
 
 		function calcHopsTotals() {
-			hopsValues.ibu = 0;
-			hopsValues.ibu = calcIBU();
+			recipe.ibu = 0;
+			recipe.ibu = calcIBU();
 		}
 
 		function calcYeastTotals() {
-			grainValues.fg  = calcFG(grainValues.og, yeastValues.attenuation);
-			yeastValues.abv = calcABV(grainValues.og, grainValues.fg);
+			recipe.fg  = calcFG(recipe.og, yeast[0].attenuation);
+			yeast.abv = calcABV(recipe.og, recipe.fg);
 		}
 
 		function calcOG(batchSize, efficiency) {
 			var grainSg = [];
-			grainInRecipe.map(function(item) {
+			recipe.grain.map(function(item) {
 				var sgOfItem = (parseFloat(item.sg) / 1000);
 				var totalSg  = (((sgOfItem * item.amount) * efficiency) / batchSize);
 				return grainSg.push(totalSg);
@@ -130,7 +120,7 @@
 		}
 
 		function calcFG(og) {
-			var fg = yeastInRecipe.map(function(item) {
+			var fg = recipe.yeast.map(function(item) {
 				var initial = ((og - 1) * (1 - (item.attenuation / 100))) + 1;
 				return Math.round(initial * 1000) / 1000;
 			});
@@ -139,7 +129,7 @@
 
 		function calcSRM(batchSize) {
 			var srm = 0;
-			srm     = grainInRecipe.map(function(item) {
+			srm     = recipe.grain.map(function(item) {
 				var mcu = ((item.lovibond * item.amount) / batchSize);
 				return 1.4922 * (Math.pow(mcu, 0.6859));
 			}).reduce(function(a, b) {
@@ -186,9 +176,9 @@
 					recipe: {
 						user: user,
 						name: recipe.name,
-						grain: this.grainInRecipe,
-						hops: this.hopsInRecipe,
-						yeast: this.yeastInRecipe,
+						grain: recipe.grain,
+						hops: recipe.hops,
+						yeast: recipe.yeast,
 						batchSize: recipe.batchSize,
 						projectedEfficiency: recipe.efficiency,
 						isPrivate: recipe.isPrivate
@@ -196,9 +186,9 @@
 				}
 			}).then(function(resp) {
 				return (
-						this.grainInRecipe = []
-								, this.hopsInRecipe = []
-								, this.yeastInRecipe = []
+						recipe.grain = []
+								, recipe.hops = []
+								, recipe.yeast = []
 								, resp.data
 				);
 			}.bind(this));

@@ -20,18 +20,9 @@
 			cnt.showGrainData         = showGrainData;
 			cnt.showHopsData          = showHopsData;
 			cnt.showYeastData         = showYeastData;
-			cnt.grainInRecipe         = RecipeService.grainInRecipe;
-			cnt.hopsInRecipe          = RecipeService.hopsInRecipe;
-			cnt.yeastInRecipe         = RecipeService.yeastInRecipe;
-			cnt.grainValues           = RecipeService.grainValues;
-			cnt.hopsValues            = RecipeService.hopsValues;
-			cnt.yeastValues           = RecipeService.yeastValues;
-			RecipeService.recipe.grain.push({grain: cnt.grainInDb[0], amount: 10});
-			RecipeService.recipe.hops.push({hops: cnt.hopsInDb[0], amount: 45});
 			cnt.recipe                = RecipeService.recipe;
-			cnt.recipe.isPrivate      = true;
 
-
+			cnt.addIngredient    = addIngredient;
 			cnt.removeGrain      = removeGrain;
 			cnt.removeHops       = removeHops;
 			cnt.removeYeast      = removeYeast;
@@ -60,16 +51,36 @@
 			cnt.updateIngredientShown();
 		}
 
+		function addIngredient(ingredient) {
+			switch (cnt.ingredientToShow.name) {
+				case 'grain':
+					RecipeService.addIngredient('grain', {
+						name: ingredient.name,
+						amount: cnt.grain.amount,
+						lovibond: ingredient.lovibond,
+						sg: ingredient.sg
+					});
+					break;
+				case 'hops':
+					RecipeService.addIngredient('hops', ingredient);
+					break;
+				case 'yeast':
+					RecipeService.addIngredient('yeast', ingredient);
+					break;
+					console.log(cnt.recipe)
+			}
+		}
+
 		function removeGrain(index) {
-			RecipeService.grainInRecipe.splice(index, 1);
+			RecipeService.recipe.grain.splice(index, 1);
 		}
 
 		function removeHops(index) {
-			RecipeService.hopsInRecipe.splice(index, 1);
+			RecipeService.recipe.hops.splice(index, 1);
 		}
 
 		function removeYeast(index) {
-			RecipeService.yeastInRecipe.splice(index, 1);
+			RecipeService.recipe.yeast.splice(index, 1);
 		}
 
 		function updateIngredientShown() {
