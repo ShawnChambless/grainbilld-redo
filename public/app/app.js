@@ -1,4 +1,4 @@
-angular.module('GrainBilld', [ 'ui.router', 'infinite-scroll' ])
+angular.module('GrainBilld', [ 'ui.router', 'infinite-scroll', 'ngSanitize' ])
 
 		.run(function() {
 				document.addEventListener('DOMContentLoaded', function() {

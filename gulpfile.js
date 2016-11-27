@@ -13,6 +13,7 @@ const gulp    = require('gulp')
 		, 'public/node_modules/materialize-css/dist/js/materialize.js'
 		, 'public/node_modules/fastclick/lib/fastclick.js'
 		, 'public/node_modules/angular/angular.js'
+			, 'public/node_modules/angular-sanitize/angular-sanitize.js'
 		, 'public/node_modules/angular-ui-router/release/angular-ui-router.js'
 		, 'public/node_modules/ng-infinite-scroll/build/ng-infinite-scroll.js'
 		, 'public/node_modules/lodash/lodash.js'

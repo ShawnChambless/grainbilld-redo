@@ -16,6 +16,7 @@
   "dependencies": {
     "angular": "^1.5.7",
     "angular-animate": "^1.5.7",
+    "angular-sanitize": "^1.5.9",
     "angular-ui-router": "^0.3.1",
     "fastclick": "^1.0.6",
     "jquery": "^3.1.1",
