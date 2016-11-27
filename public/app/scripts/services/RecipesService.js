@@ -19,38 +19,17 @@
 			, og: 0
 			, fg: 0
 			, efficiency: 0.75
+			, abv: 0
+			, isPrivate: true
 		};
 
 		return {
 			recipe: recipe
-			, Grain: Grain
-			, Hops: Hops
-			, Yeast: Yeast
 			, getLatestCommunity: getLatestCommunity
 			, addIngredient: addIngredient
 			, getAllIngredients: getAllIngredients
 			, saveRecipeToUser: saveRecipeToUser
 		};
-
-		function Grain(name, lovibond, sg, amount) {
-			this.name     = name;
-			this.amount   = amount;
-			this.lovibond = lovibond;
-			this.sg       = sg;
-		}
-
-		function Hops(name, alphaAcid, boilTime, amount) {
-			this.name      = name;
-			this.amount    = amount;
-			this.alphaAcid = alphaAcid;
-			this.boilTime  = boilTime;
-		}
-
-		function Yeast(name, attenuation) {
-			this.name        = name;
-			this.attenuation = attenuation;
-		}
-
 
 		function getLatestCommunity() {
 			return $http.get('/api/recipes/latest').then(function(data) {
@@ -61,13 +40,13 @@
 		function addIngredient(ingredientType, ingredient) {
 			switch (ingredientType) {
 				case 'grain':
-					addGrainToRecipe(new Grain(ingredient.name, ingredient.amount, ingredient.lovibond, ingredient.sg));
+					addGrainToRecipe(ingredient);
 					break;
 				case 'hops':
-					addHopsToRecipe(new Hops(ingredient.hops.name, ingredient.amount, ingredient.hops.alphaAcid, ingredient.boilTime));
+					addHopsToRecipe(ingredient);
 					break;
 				case 'yeast':
-					addYeastToRecipe(new Yeast(ingredient.hops.name, ingredient.hops.attenuation));
+					addYeastToRecipe(ingredient);
 					break;
 			}
 		}
@@ -101,9 +80,9 @@
 			recipe.ibu = calcIBU();
 		}
 
-		function calcYeastTotals() {
-			recipe.fg  = calcFG(recipe.og, yeast[0].attenuation);
-			yeast.abv = calcABV(recipe.og, recipe.fg);
+		function calcYeastTotals(yeast) {
+			recipe.fg  = calcFG(recipe.og, yeast.attenuation);
+			recipe.abv = calcABV(recipe.og, recipe.fg);
 		}
 
 		function calcOG(batchSize, efficiency) {
@@ -128,27 +107,22 @@
 		}
 
 		function calcSRM(batchSize) {
-			var srm = 0;
-			srm     = recipe.grain.map(function(item) {
+			return recipe.grain.map(function(item) {
 				var mcu = ((item.lovibond * item.amount) / batchSize);
 				return 1.4922 * (Math.pow(mcu, 0.6859));
 			}).reduce(function(a, b) {
 				return a + b;
-			});
-			return srm.toFixed(2);
+			}).toFixed(2);
 		}
 
-		function calcIBU(hops) {
-			var batchSize = 5,
-					ibu       = hopsInRecipe.map(function(item) {
-						var utilization = findHopUtilization(item.boilTime);
-						return parseFloat(((item.alphaAcid * utilization * 74.89 / batchSize) * 100).toFixed(1));
-					})
-							.reduce(function(a, b) {
-								return a + b;
-							});
-			console.log(hopsInRecipe, ibu);
-			return parseFloat(ibu);
+		function calcIBU() {
+			return parseFloat(recipe.hops.map(function(item) {
+				var utilization = findHopUtilization(item.boilTime);
+				return parseFloat(((item.alphaAcid * utilization * 74.89 / recipe.size) * 100).toFixed(1));
+			})
+					.reduce(function(a, b) {
+						return a + b;
+					}));
 		}
 
 		function calcABV(og, fg) {

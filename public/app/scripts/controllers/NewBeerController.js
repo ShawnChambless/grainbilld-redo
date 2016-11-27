@@ -5,9 +5,9 @@
 			.module('GrainBilld')
 			.controller('NewBeerController', newBeerController);
 
-	newBeerController.$inject = [ 'RecipeService', 'getIngredients', '$timeout' ];
+	newBeerController.$inject = [ '$scope', 'RecipeService', 'getIngredients', '$timeout' ];
 
-	function newBeerController(RecipeService, getIngredients, $timeout) {
+	function newBeerController($scope, RecipeService, getIngredients, $timeout) {
 
 		var cnt = this;
 
@@ -21,51 +21,61 @@
 			cnt.showHopsData          = showHopsData;
 			cnt.showYeastData         = showYeastData;
 			cnt.recipe                = RecipeService.recipe;
-
-			cnt.addIngredient    = addIngredient;
-			cnt.removeGrain      = removeGrain;
-			cnt.removeHops       = removeHops;
-			cnt.removeYeast      = removeYeast;
-			cnt.saveRecipeToUser = saveRecipeToUser;
+			cnt.recipeHasIngredients  = false;
+			cnt.addIngredient         = addIngredient;
+			cnt.removeGrain           = removeGrain;
+			cnt.removeHops            = removeHops;
+			cnt.removeYeast           = removeYeast;
+			cnt.saveRecipeToUser      = saveRecipeToUser;
 
 			cnt.updateIngredientShown();
+
+
+			$scope.$watch(function() {
+				cnt.recipeHasIngredients = cnt.recipe.grain.length || cnt.recipe.hops.length || cnt.recipe.yeast.length;
+				return cnt.recipeHasIngredients;
+			});
+
 		}
 
 		init();
 
+
+
 		function showGrainData() {
 			cnt.ingredientToShow.arr  = cnt.grainInDb;
 			cnt.ingredientToShow.name = 'grain';
+			cnt.showGrainInRecipe     = true;
+			cnt.showHopsInRecipe      = cnt.showYeastInRecipe = false;
 			cnt.updateIngredientShown();
 		}
 
 		function showHopsData() {
 			cnt.ingredientToShow.arr  = cnt.hopsInDb;
 			cnt.ingredientToShow.name = 'hops';
+			cnt.showHopsInRecipe      = true;
+			cnt.showGrainInRecipe     = cnt.showYeastInRecipe = false;
 			cnt.updateIngredientShown();
 		}
 
 		function showYeastData() {
 			cnt.ingredientToShow.arr  = cnt.yeastInDb;
 			cnt.ingredientToShow.name = 'yeast';
+			cnt.showYeastInRecipe     = true;
+			cnt.showGrainInRecipe     = cnt.showGrainInRecipe = false;
 			cnt.updateIngredientShown();
 		}
 
 		function addIngredient(ingredient) {
 			switch (cnt.ingredientToShow.name) {
 				case 'grain':
-					RecipeService.addIngredient('grain', {
-						name: ingredient.name,
-						amount: cnt.grain.amount,
-						lovibond: ingredient.lovibond,
-						sg: ingredient.sg
-					});
+					RecipeService.addIngredient('grain', new Grain(ingredient.name, ingredient.lovibond, ingredient.sg, cnt.grain.amount));
 					break;
 				case 'hops':
-					RecipeService.addIngredient('hops', ingredient);
+					RecipeService.addIngredient('hops', new Hops(ingredient.name, ingredient.alphaAcid, cnt.hops.boilTime, cnt.hops.amount));
 					break;
 				case 'yeast':
-					RecipeService.addIngredient('yeast', ingredient);
+					RecipeService.addIngredient('yeast', new Yeast(ingredient.name, (ingredient.maximumAttenuation + ingredient.minimumAttenuation) / 2));
 					break;
 					console.log(cnt.recipe)
 			}
@@ -94,6 +104,25 @@
 			RecipeService.saveRecipeToUser(recipe, user).then(function(resp) {
 				console.log(resp);
 			});
+		}
+
+		function Grain(name, lovibond, sg, amount) {
+			this.name     = name;
+			this.lovibond = lovibond;
+			this.sg       = sg;
+			this.amount   = amount;
+		}
+
+		function Hops(name, alphaAcid, boilTime, amount) {
+			this.name      = name;
+			this.alphaAcid = alphaAcid;
+			this.boilTime  = boilTime;
+			this.amount    = amount;
+		}
+
+		function Yeast(name, attenuation) {
+			this.name        = name;
+			this.attenuation = attenuation;
 		}
 
 		return cnt;

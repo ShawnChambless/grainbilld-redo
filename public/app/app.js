@@ -1,11 +1,9 @@
 angular.module('GrainBilld', [ 'ui.router' ])
 
 		.run(function() {
-			if ('addEventListener' in document) {
 				document.addEventListener('DOMContentLoaded', function() {
 					FastClick.attach(document.body);
 				}, false);
-			}
 		})
 
 		.config(function($stateProvider, $urlRouterProvider) {
