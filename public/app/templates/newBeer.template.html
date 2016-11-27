@@ -92,11 +92,13 @@
 	<label for='yeastFilter'>Filter yeast</label>
 </div>
 
-<ul class='collection' ng-show='cnt.ingredientToShow.name'>
+<ul class='collection with-header'
+    infinite-scroll='cnt.loadMore()'
+    ng-show='cnt.ingredientToShow.name'>
+	<li class='collection-header'><h4>{{cnt.ingredientToShow.name.toUpperCase()}}</h4></li>
 	<li class='collection-item hoverable' ng-repeat='ingredient in cnt.ingredientToShow.arr'
 	    ng-click='cnt.addIngredient(ingredient)'>
-		{{ingredient.name}}
-			<i class='material-icons tooltipped' info={{ingredient.name}}
-	                                             tooltip>info_outline</i>
-	</li>
+		<span class='title truncate'>{{ingredient.name}}</span>
+		<span ng-repeat='spec in ingredient.specs'>{{spec}}<br></span>
+
 </ul>

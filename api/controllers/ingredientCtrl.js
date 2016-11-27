@@ -9,16 +9,17 @@ var mongoose = require('mongoose'),
 module.exports = {
 
     getAllIngredients: function (req, res) {
-        Grain.find(function (err, grain) {
+        Grain.find({}, 'name lovibond sg lovibond description', function (err, grain) {
             if (err) return res.status(500).json(err);
 
-            Hops.find(function (err2, hops) {
+            Hops.find({}, 'name alpha_acid description', function (err2, hops) {
                 if (err2) return res.status(500).json(err2);
 
-                Yeast.find(function (err3, yeast) {
+
+							Yeast.find({}, 'name minimumAttenuation maximumAttenuation', function (err3, yeast) {
                     if (err3) return res.status(500).json(err3);
 
-                    return res.status(200).json({grain: grain, hops: hops, yeast: yeast});
+								return res.status(200).json({grain: grain, hops: hops, yeast: yeast});
                 });
 
             });

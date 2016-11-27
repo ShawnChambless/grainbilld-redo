@@ -11,11 +11,18 @@
 
 		var cnt = this;
 
+		cnt.init = init;
+
+		cnt.init();
+
 		function init() {
 			cnt.grainInDb             = getIngredients.grain;
 			cnt.hopsInDb              = getIngredients.hops;
 			cnt.yeastInDb             = getIngredients.yeast;
-			cnt.ingredientToShow      = { name: 'grain', arr: cnt.grainInDb };
+			cnt.initialGrainsToShow   = getIngredients.grain.slice(0, 9);
+			cnt.initialHopsToShow     = getIngredients.hops.slice(0, 9);
+			cnt.initialYeastToShow    = getIngredients.yeast.slice(0, 9);
+			cnt.ingredientToShow      = { name: 'grain', arr: cnt.initialGrainsToShow };
 			cnt.updateIngredientShown = updateIngredientShown;
 			cnt.showGrainData         = showGrainData;
 			cnt.showHopsData          = showHopsData;
@@ -27,8 +34,12 @@
 			cnt.removeHops            = removeHops;
 			cnt.removeYeast           = removeYeast;
 			cnt.saveRecipeToUser      = saveRecipeToUser;
+			cnt.loadMore              = loadMore;
 
 			cnt.updateIngredientShown();
+			formatArrays();
+			setInitialIngredientsToShow();
+
 
 
 			$scope.$watch(function() {
@@ -38,12 +49,9 @@
 
 		}
 
-		init();
-
-
-
 		function showGrainData() {
-			cnt.ingredientToShow.arr  = cnt.grainInDb;
+			setInitialIngredientsToShow();
+			cnt.ingredientToShow.arr  = cnt.initialGrainsToShow;
 			cnt.ingredientToShow.name = 'grain';
 			cnt.showGrainInRecipe     = true;
 			cnt.showHopsInRecipe      = cnt.showYeastInRecipe = false;
@@ -51,7 +59,8 @@
 		}
 
 		function showHopsData() {
-			cnt.ingredientToShow.arr  = cnt.hopsInDb;
+			setInitialIngredientsToShow();
+			cnt.ingredientToShow.arr  = cnt.initialHopsToShow;
 			cnt.ingredientToShow.name = 'hops';
 			cnt.showHopsInRecipe      = true;
 			cnt.showGrainInRecipe     = cnt.showYeastInRecipe = false;
@@ -59,11 +68,29 @@
 		}
 
 		function showYeastData() {
-			cnt.ingredientToShow.arr  = cnt.yeastInDb;
+			setInitialIngredientsToShow();
+			cnt.ingredientToShow.arr  = cnt.initialYeastToShow;
 			cnt.ingredientToShow.name = 'yeast';
 			cnt.showYeastInRecipe     = true;
 			cnt.showGrainInRecipe     = cnt.showGrainInRecipe = false;
 			cnt.updateIngredientShown();
+		}
+
+		function setInitialIngredientsToShow() {
+			cnt.initialGrainsToShow   = getIngredients.grain.slice(0, 9);
+			cnt.initialHopsToShow     = getIngredients.hops.slice(0, 9);
+			cnt.initialYeastToShow    = getIngredients.yeast.slice(0, 9);
+		}
+
+		function formatArrays() {
+			_.forEach(cnt.grainInDb, function(item) {
+				item.specs = [];
+				_.unset(item, '_id');
+				_.forIn(item, function(val, key) {
+					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+				});
+			});
+			console.log(cnt.grainInDb[0])
 		}
 
 		function addIngredient(ingredient) {
@@ -123,6 +150,27 @@
 		function Yeast(name, attenuation) {
 			this.name        = name;
 			this.attenuation = attenuation;
+		}
+
+		function loadMore() {
+			var arr             = cnt.ingredientToShow.arr;
+			var nextIngredients = [];
+			switch (cnt.ingredientToShow.name) {
+				case 'grain':
+					nextIngredients = cnt.grainInDb.slice(arr.length, (cnt.grainInDb.length - arr.length + 9));
+					break;
+				case 'hops':
+					nextIngredients = cnt.hopsInDb.slice(arr.length, (cnt.hopsInDb.length - arr.length + 9));
+					break;
+				case 'yeast':
+					nextIngredients = cnt.yeastInDb.slice(arr.length, (cnt.yeastInDb.length - arr.length + 9));
+					break;
+			}
+
+			cnt.ingredientToShow.arr.push(nextIngredients);
+			return cnt.ingredientToShow.arr = cnt.ingredientToShow.arr.reduce(function(a, b) {
+				return a.concat(b);
+			}, []);
 		}
 
 		return cnt;
