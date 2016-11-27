@@ -1,16 +1,14 @@
-angular.module('GrainBilld', [ 'ui.router' ])
+angular.module('GrainBilld', [ 'ui.router', 'infinite-scroll' ])
 
 		.run(function() {
-			if ('addEventListener' in document) {
 				document.addEventListener('DOMContentLoaded', function() {
 					FastClick.attach(document.body);
 				}, false);
-			}
 		})
 
 		.config(function($stateProvider, $urlRouterProvider) {
 
-			$urlRouterProvider.otherwise('/Home');
+			$urlRouterProvider.otherwise('/NewBeer');
 
 			$stateProvider
 
