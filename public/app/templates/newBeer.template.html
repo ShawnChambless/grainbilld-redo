@@ -3,16 +3,22 @@
 		<div class='row'>
 			<div class='input-field col s7'>
 				<label for='name'>Recipe Name</label>
-				<input type='text' id='name' class='validate' ng-model='cnt.recipe.name' required />
+				<input type='text' id='name' class='validate' ng-minlength='1' ng-model='cnt.recipe.name' required />
 			</div>
-			<div class='input-field col s3'>
+			<div class='input-field col s2'>
 				<label for='batchSize'>Batch Size</label>
 				<input type='number' id='batchSize' ng-model='cnt.recipe.size' min='1' required />
 			</div>
-			<div class='input-field col s2'>
-				<input type='checkbox' class='with-gap' ng-model='cnt.recipe.isPrivate' ng-true-value='true'
-				       ng-false-value='false' id='privateCheckbox' />
-				<label for='privateCheckbox'>Private?</label>
+			<div class='input-field col s3 switch'>
+				<label>
+					Public
+					<input type='checkbox'
+					       ng-model='cnt.recipe.isPrivate'
+					       ng-true-value='true'
+					       ng-false-value='false' />
+					<span class="lever"></span>
+					Private
+				</label>
 			</div>
 
 		</div>
@@ -49,15 +55,15 @@
 	</form>
 </div>
 
-<a id='grain' class='waves-effect waves-green btn light-blue lighten-1' ng-click='cnt.showGrainData()'>Grain</a>
+<a id='grain' class='waves-effect waves-light btn light-blue lighten-1' ng-click='cnt.showGrainData()'>Grain</a>
 <a id='hops' class='waves-effect waves-light btn light-blue lighten-1' ng-click='cnt.showHopsData()'>Hops</a>
 <a id='yeast' class='waves-effect waves-light btn light-blue lighten-1' ng-click='cnt.showYeastData()'>Yeast</a>
 
 <div class='row' ng-if="cnt.ingredientToShow.name == 'grain'">
 
 	<div class='input-field col s6'>
-		<input id='grainFilter' type='text' ng-model='ingredientFilter' />
-		<label for='grainFilter'>Filter grain</label>
+		<input id='grainFilter' type='text' ng-model='cnt.ingredientFilter' ng-change='cnt.loadMore()' />
+		<label for='grainFilter'>Search grain</label>
 	</div>
 
 	<div class='input-field col s6'>
@@ -70,12 +76,12 @@
 <div class='row' ng-if="cnt.ingredientToShow.name == 'hops'">
 
 	<div class='input-field col s4'>
-		<input id='hopsFilter' type='text' ng-model='ingredientFilter' />
-		<label for='hopsFilter'>Filter hops</label>
+		<input id='hopsFilter' type='text' ng-model='cnt.ingredientFilter' ng-change='cnt.loadMore()' />
+		<label for='hopsFilter'>Search hops</label>
 	</div>
 
 	<div class='input-field col s4'>
-		<input id='hopsAmount' type='number' ng-model='cnt.hops.amount'>
+		<input id='hopsAmount' type='number' ng-model='cnt.hops.amount' />
 		<label for='hopsAmount'>How much?</label>
 	</div>
 
@@ -88,17 +94,18 @@
 
 
 <div class='input-field' ng-if="cnt.ingredientToShow.name == 'yeast'">
-	<input id='yeastFilter' type='text' ng-model='ingredientFilter' />
-	<label for='yeastFilter'>Filter yeast</label>
+	<input id='yeastFilter' type='text' ng-model='cnt.ingredientFilter' ng-change='cnt.loadMore()' />
+	<label for='yeastFilter'>Search yeast</label>
 </div>
 
-<ul class='collection with-header'
+<ul class='collection'
     infinite-scroll='cnt.loadMore()'
     ng-show='cnt.ingredientToShow.name'>
-	<li class='collection-header'><h4>{{cnt.ingredientToShow.name.toUpperCase()}}</h4></li>
-	<li class='collection-item hoverable' ng-repeat='ingredient in cnt.ingredientToShow.arr'
+	<li class='collection-item avatar hoverable'
+	    ng-repeat='ingredient in cnt.ingredientToShow.arr | filter: cnt.ingredientFilter'
 	    ng-click='cnt.addIngredient(ingredient)'>
-		<span class='title truncate'>{{ingredient.name}}</span>
-		<span ng-repeat='spec in ingredient.specs'>{{spec}}<br></span>
+		<img ng-src='assets/images/{{cnt.ingredientToShow.name}}.png' class='circle'>
+		<span class='title'><strong>{{ingredient.name}}</strong></span>
+		<p class='truncate' ng-repeat='spec in ingredient.specs'>{{spec}}</p>
 
 </ul>

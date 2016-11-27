@@ -90,7 +90,23 @@
 					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
 				});
 			});
-			console.log(cnt.grainInDb[0])
+
+
+			_.forEach(cnt.hopsInDb, function(item) {
+				item.specs = [];
+				_.unset(item, '_id');
+				_.forIn(item, function(val, key) {
+					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+				});
+			});
+
+			_.forEach(cnt.yeastInDb, function(item) {
+				item.specs = [];
+				_.unset(item, '_id');
+				_.forIn(item, function(val, key) {
+					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+				});
+			});
 		}
 
 		function addIngredient(ingredient) {
@@ -124,6 +140,7 @@
 			cnt.showGrain ? cnt.ingredientToShow.name = 'grain' : false;
 			cnt.showHops ? cnt.ingredientToShow.name = 'hops' : false;
 			cnt.showYeast ? cnt.ingredientToShow.name = 'yeast' : false;
+			cnt.ingredientFilter = '';
 		}
 
 		function saveRecipeToUser(recipe) {

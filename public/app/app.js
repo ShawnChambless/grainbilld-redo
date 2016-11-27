@@ -8,7 +8,7 @@ angular.module('GrainBilld', [ 'ui.router', 'infinite-scroll' ])
 
 		.config(function($stateProvider, $urlRouterProvider) {
 
-			$urlRouterProvider.otherwise('/Home');
+			$urlRouterProvider.otherwise('/NewBeer');
 
 			$stateProvider
 
