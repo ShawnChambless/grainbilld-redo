@@ -153,13 +153,13 @@
 		function Grain(name, lovibond, sg, amount) {
 			this.name     = name;
 			this.lovibond = lovibond;
-			this.sg       = sg;
+			this.sg       = ((sg - 1) * 1000).toFixed(1);
 			this.amount   = amount;
 		}
 
 		function Hops(name, alphaAcid, boilTime, amount) {
 			this.name      = name;
-			this.alphaAcid = alphaAcid;
+			this.alphaAcid = (alphaAcid / 100);
 			this.boilTime  = boilTime;
 			this.amount    = amount;
 		}

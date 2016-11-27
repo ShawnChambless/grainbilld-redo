@@ -23,10 +23,10 @@
 
 		</div>
 
-		<div class='row' ng-show='cnt.recipeHasIngredients'>
+		<div class='row'>
 
 			<ul class='collapsible' data-collapsible='accordion' collapse>
-				<li ng-if='cnt.recipe.grain.length'>
+				<li>
 					<div class='collapsible-header'>
 						<span class='new badge' data-badge-caption=''>{{cnt.recipe.grain.length}}</span>
 						<i class='material-icons'>list</i>Grain
@@ -34,17 +34,19 @@
 					<div class='collapsible-body'
 					     ng-repeat='grain in cnt.recipe.grain'><p>{{grain.amount}}lbs {{grain.name}}</p></div>
 				</li>
-				<li ng-if='cnt.recipe.hops.length'>
-					<div class='collapsible-header'><i
-							class='material-icons'>list</i>Hops
+				<li>
+					<div class='collapsible-header'>
+						<span class='new badge' data-badge-caption=''>{{cnt.recipe.hops.length}}</span>
+						<i class='material-icons'>list</i>Hops
 					</div>
 					<div class='collapsible-body' ng-repeat='hops in cnt.recipe.hops'><p>{{hops.amount}}oz
 					                                                                     {{hops.boilTime}}mins{{hops.name}}</p>
 					</div>
 				</li>
-				<li ng-if='cnt.recipe.yeast.length'>
-					<div class='collapsible-header'><i
-							class='material-icons'>list</i>Yeast
+				<li>
+					<div class='collapsible-header'>
+						<span class='new badge' data-badge-caption=''>{{cnt.recipe.yeast.length}}</span>
+						<i class='material-icons'>list</i>Yeast
 					</div>
 					<div class='collapsible-body' ng-repeat='yeast in cnt.recipe.yeast'><p>{{yeast.name}}</p></div>
 				</li>

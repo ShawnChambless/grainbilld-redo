@@ -49,6 +49,7 @@
 					addYeastToRecipe(ingredient);
 					break;
 			}
+			console.log(recipe)
 		}
 
 		function getAllIngredients() {
@@ -71,7 +72,7 @@
 		}
 
 		function calcGrainTotals() {
-			recipe.og  = calcOG(recipe.size, recipe.efficiency);
+			recipe.og  = calcOG();
 			recipe.srm = calcSRM(recipe.size);
 		}
 
@@ -80,22 +81,22 @@
 			recipe.ibu = calcIBU();
 		}
 
-		function calcYeastTotals(yeast) {
-			recipe.fg  = calcFG(recipe.og, yeast.attenuation);
+		function calcYeastTotals() {
+			recipe.fg  = calcFG(recipe.og);
 			recipe.abv = calcABV(recipe.og, recipe.fg);
 		}
 
-		function calcOG(batchSize, efficiency) {
+		function calcOG() {
 			var grainSg = [];
-			recipe.grain.map(function(item) {
+			_.map(recipe.grain, (function(item) {
 				var sgOfItem = (parseFloat(item.sg) / 1000);
-				var totalSg  = (((sgOfItem * item.amount) * efficiency) / batchSize);
+				var totalSg  = (((sgOfItem * item.amount) * recipe.efficiency) / recipe.size);
 				return grainSg.push(totalSg);
-			});
-			grainSg = grainSg.reduce(function(a, b) {
+			}));
+			var final = grainSg.reduce(function(a, b) {
 				return (a + b);
 			});
-			return (1 + grainSg).toFixed(3);
+			return (1 + final).toFixed(3);
 		}
 
 		function calcFG(og) {
@@ -106,9 +107,9 @@
 			return parseFloat(fg);
 		}
 
-		function calcSRM(batchSize) {
+		function calcSRM() {
 			return recipe.grain.map(function(item) {
-				var mcu = ((item.lovibond * item.amount) / batchSize);
+				var mcu = ((item.lovibond * item.amount) / recipe.size);
 				return 1.4922 * (Math.pow(mcu, 0.6859));
 			}).reduce(function(a, b) {
 				return a + b;
