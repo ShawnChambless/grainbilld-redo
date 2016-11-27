@@ -22,6 +22,7 @@
 			<ul class='collapsible' data-collapsible='accordion' collapse>
 				<li ng-if='cnt.recipe.grain.length'>
 					<div class='collapsible-header'>
+						<span class='new badge' data-badge-caption=''>{{cnt.recipe.grain.length}}</span>
 						<i class='material-icons'>list</i>Grain
 					</div>
 					<div class='collapsible-body'
@@ -48,7 +49,7 @@
 	</form>
 </div>
 
-<a id='grain' class='waves-effect waves-light btn light-blue lighten-1' ng-click='cnt.showGrainData()'>Grain</a>
+<a id='grain' class='waves-effect waves-green btn light-blue lighten-1' ng-click='cnt.showGrainData()'>Grain</a>
 <a id='hops' class='waves-effect waves-light btn light-blue lighten-1' ng-click='cnt.showHopsData()'>Hops</a>
 <a id='yeast' class='waves-effect waves-light btn light-blue lighten-1' ng-click='cnt.showYeastData()'>Yeast</a>
 
@@ -92,7 +93,10 @@
 </div>
 
 <ul class='collection' ng-show='cnt.ingredientToShow.name'>
-	<li class='collection-item' ng-repeat='ingredient in cnt.ingredientToShow.arr'
-	    ng-click='cnt.addIngredient(ingredient)'>{{ingredient.name}}
+	<li class='collection-item hoverable' ng-repeat='ingredient in cnt.ingredientToShow.arr'
+	    ng-click='cnt.addIngredient(ingredient)'>
+		{{ingredient.name}}
+			<i class='material-icons tooltipped' info={{ingredient.name}}
+	                                             tooltip>info_outline</i>
 	</li>
 </ul>
