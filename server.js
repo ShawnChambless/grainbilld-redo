@@ -14,6 +14,7 @@ const express          = require('express'),
 			app              = express();
 
 mongoose
+		.set('debug', true)
 		.connect('mongodb://localhost:27017/grainbilld', function() {
 			console.log('Mongo is also Listening');
 		});
