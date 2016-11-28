@@ -6,8 +6,7 @@
 				Grain          = mongoose.model('Grain', require('../models/grainModel')),
 				Hops           = mongoose.model('Hops', require('../models/hopsModel')),
 				Yeast          = mongoose.model('Yeast', require('../models/yeastModel')),
-				Recipe         = mongoose.model('Recipe', require('../models/recipeModel')),
-				AllIngredients = mongoose.model('AllIngredients', require('../models/allIngredientsModel'));
+				Recipe         = mongoose.model('Recipe', require('../models/recipeModel'));
 
 	mongoose.Promise = global.Promise;
 
