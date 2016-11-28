@@ -1,16 +1,19 @@
-var mongoose    = require( 'mongoose' ),
-    Recipe      = require('./recipeModel');
+(function() {
+	'use strict';
 
-var userSchema = {
-  firstName:  { type: String, required: true },
-  lastName:   { type: String, required: true },
-  email:      { type: String, required: true, unique: true },
-  password:   { type: String, required: true },
-  recipes:    [ { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' } ],
-  favorites:  [ { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' } ]
-};
+	const mongoose   = require('mongoose'),
+				Recipe     = require('./recipeModel'),
 
-module.exports = new mongoose.Schema( userSchema );
+				userSchema = {
+					firstName: { type: String, required: true },
+					lastName: { type: String, required: true },
+					email: { type: String, required: true, unique: true },
+					password: { type: String, required: true },
+					recipes: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' } ],
+					favorites: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' } ]
+				};
 
+	module.exports = new mongoose.Schema(userSchema);
 
-/// TODO refactor
+}());
+

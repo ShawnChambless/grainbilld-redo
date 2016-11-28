@@ -8,7 +8,7 @@
 	IngredientRouter
 			.get('/grain', IngredientCtrl.getGrain)
 			.post('/grain', IngredientCtrl.addGrain)
-			.put('/grain/:_id/', IngredientCtrl.updateGrain)
+			.put('/grain/:_id', IngredientCtrl.updateGrain)
 			.get('/hops', IngredientCtrl.getHops)
 			.post('/hops', IngredientCtrl.addHops)
 			.get('/yeast', IngredientCtrl.getYeast)

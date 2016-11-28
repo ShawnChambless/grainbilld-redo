@@ -1,12 +1,12 @@
 (function() {
 	'use strict';
 
-	const mongoose       = require('mongoose'),
-				User           = mongoose.model('User', require('../models/userModel')),
-				Grain          = mongoose.model('Grain', require('../models/grainModel')),
-				Hops           = mongoose.model('Hops', require('../models/hopsModel')),
-				Yeast          = mongoose.model('Yeast', require('../models/yeastModel')),
-				Recipe         = mongoose.model('Recipe', require('../models/recipeModel'));
+	const mongoose = require('mongoose'),
+				User     = mongoose.model('User', require('../models/userModel')),
+				Grain    = mongoose.model('Grain', require('../models/grainModel')),
+				Hops     = mongoose.model('Hops', require('../models/hopsModel')),
+				Yeast    = mongoose.model('Yeast', require('../models/yeastModel')),
+				Recipe   = mongoose.model('Recipe', require('../models/recipeModel'));
 
 	mongoose.Promise = global.Promise;
 
@@ -22,7 +22,8 @@
 			});
 			User.findById(req.body.recipe.user).then((err, user) => {
 				user.recipes.push(recipeId);
-				user.save(function(err) {
+				user.save((err) => {
+					if (err) return res.status(500).json(err);
 					return res.status(200).json(recipeName + ' saved!');
 				});
 			});
@@ -31,9 +32,9 @@
 		getCommunityRecipes(req, res) {
 			Recipe.find({})
 					.where('isPrivate').equals(false)
-					.exec().then((err, recipes) => {
-				responseHandler(res, err, recipes);
-			});
+					.exec((err, recipes) => {
+						responseHandler(res, err, recipes);
+					});
 		},
 
 		getLatestCommunityRecipes(req, res) {
@@ -41,31 +42,29 @@
 					.where('isPrivate').equals(false)
 					.sort('dateCreated')
 					.limit(5)
-					.exec().then((err, recipes) => {
-				responseHandler(res, err, recipes);
-			});
+					.exec((err, recipes) => {
+						responseHandler(res, err, recipes);
+					});
 		},
 
 		getRecipeTotals(req, res) {
-			Recipe.find({})
-					.exec().then((err, resp) => {
-				if (err) return res.status(500).json(err);
-				let totalCommunity = 0;
-				resp.forEach(function(item) {
-					if (!item.isPrivate) totalCommunity++;
-				});
-				return res.status(200).json({ totalCount: resp.length, totalCommunity: totalCommunity });
+			Recipe.count({ isPrivate: false }, (err, resp) => {
+				responseHandler(res, err, resp);
 			});
 		},
 
 		removeRecipe(req, res) {
-			Recipe.findByIdAndRemove(req.body.recipeId).then((err, resp) => {
+			Recipe.findByIdAndRemove(req.body.recipeId, ((err, resp) => {
 				if (err) return res.status(500).json(err);
-				console.log(resp);
-				User.findByIdAndUpdate(resp.user, { $pull: { recipes: req.body.recipeId } }, { new: true }, function(err, resp) {
-					responseHandler(res, err, resp);
-				});
-			});
+				User.findByIdAndUpdate(resp.user, {
+							$pull: {
+								recipes: req.body.recipeId
+							}
+						},
+						{ new: true }, (err, resp) => {
+							responseHandler(res, err, resp);
+						});
+			}));
 		}
 	};
 
