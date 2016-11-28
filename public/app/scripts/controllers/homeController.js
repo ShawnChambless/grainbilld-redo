@@ -1,22 +1,23 @@
 (function() {
 	'use strict';
 
-	angular.module('GrainBilld')
-	.controller('HomeController', function($scope, HomeService, RecipeService) {
+	angular
+			.module('GrainBilld')
+			.controller('HomeController', homeController);
 
-		var $parent = this;
+	homeController.$inject = [ 'HomeService', 'RecipeService', 'latestRecipes' ];
 
-		$parent.init = function() {
-			$parent.getLatestCommunity();
-		};
+	function homeController(HomeService, RecipeService, latestRecipes) {
 
-		$parent.getLatestCommunity = function() {
-			RecipeService.getLatestCommunity().then(function(data) {
-				$scope.latestCommunity =  data;
-			});
-		};
+		var cnt = this;
 
-		$parent.init();
-		
-	});
+		function init() {
+			cnt.latestCommunity = latestRecipes;
+		}
+
+		init();
+
+		return cnt;
+
+	}
 }());

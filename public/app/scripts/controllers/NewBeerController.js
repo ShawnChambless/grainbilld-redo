@@ -1,78 +1,197 @@
-(function () {
-    "use strict";
+(function() {
+	"use strict";
 
-angular.module('GrainBilld')
-    .controller('NewBeerController', function($scope, RecipeService, getIngredients, $rootScope, $state, $timeout) {
+	angular
+			.module('GrainBilld')
+			.controller('NewBeerController', newBeerController);
 
-        console.log(getIngredients)
+	newBeerController.$inject = [ '$scope', 'RecipeService', 'getIngredients', '$timeout' ];
 
-        $scope.grainInDb        = getIngredients.grain;
-        $scope.hopsInDb         = getIngredients.hops;
-        $scope.yeastInDb        = getIngredients.yeast;
-        $scope.grainInRecipe    = RecipeService.grainInRecipe;
-        $scope.hopsInRecipe     = RecipeService.hopsInRecipe;
-        $scope.yeastInRecipe    = RecipeService.yeastInRecipe;
-        $scope.grainValues      = RecipeService.grainValues;
-        $scope.hopsValues       = RecipeService.hopsValues;
-        $scope.yeastValues      = RecipeService.yeastValues;
-        $scope.grains           = 'grain';
-        $scope.hopss            = 'hops';
-        $scope.yeasts           = 'yeast';
-        $scope.recipe           = {};
-        $scope.recipe.isPrivate = true;
+	function newBeerController($scope, RecipeService, getIngredients, $timeout) {
 
-        $scope.showGrainData = function() {
-            $scope.showGrain    = true;
-            $scope.showHops     = false;
-            $scope.showYeast    = false;
-        };
+		var cnt = this;
 
-        $scope.showHopsData = function() {
-            $scope.showGrain  = false;
-            $scope.showHops   = true;
-            $scope.showYeast  = false;
-        };
+		cnt.init = init;
 
-        $scope.showYeastData = function() {
-            $scope.showGrain    = false;
-            $scope.showHops     = false;
-            $scope.showYeast    = true;
-        };
+		cnt.init();
 
-        $scope.removeGrain = function(index) {
-            RecipeService.grainInRecipe.splice(index, 1);
-        };
+		function init() {
+			cnt.grainInDb             = getIngredients.grain;
+			cnt.hopsInDb              = getIngredients.hops;
+			cnt.yeastInDb             = getIngredients.yeast;
+			cnt.initialGrainsToShow   = getIngredients.grain.slice(0, 9);
+			cnt.initialHopsToShow     = getIngredients.hops.slice(0, 9);
+			cnt.initialYeastToShow    = getIngredients.yeast.slice(0, 9);
+			cnt.ingredientToShow      = { name: 'grain', arr: cnt.initialGrainsToShow };
+			cnt.updateIngredientShown = updateIngredientShown;
+			cnt.showGrainData         = showGrainData;
+			cnt.showHopsData          = showHopsData;
+			cnt.showYeastData         = showYeastData;
+			cnt.recipe                = RecipeService.recipe;
+			cnt.recipeHasIngredients  = false;
+			cnt.addIngredient         = addIngredient;
+			cnt.removeGrain           = removeGrain;
+			cnt.removeHops            = removeHops;
+			cnt.removeYeast           = removeYeast;
+			cnt.saveRecipeToUser      = saveRecipeToUser;
+			cnt.loadMore              = loadMore;
 
-        $scope.removeHops = function(index) {
-            RecipeService.hopsInRecipe.splice(index, 1);
-        };
+			cnt.updateIngredientShown();
+			formatArrays();
+			setInitialIngredientsToShow();
 
-        $scope.removeYeast = function(index) {
-            RecipeService.yeastInRecipe.splice(index, 1);
-        };
 
-        $scope.saveRecipeToUser = function(recipe) {
-            var user = $scope.currentUser.id;
-            RecipeService.saveRecipeToUser(recipe, user).then(function(resp) {
-                console.log(resp);
-                $scope.response = resp;
-                var flashSuccess = document.getElementById('flashSuccess');
-                flashSuccess.classList.toggle('active');
-                $timeout(function() {
-                    flashSuccess.classList.toggle('active');
-                }, 3000);
-                $scope.showGrain = $scope.showHops = $scope.showYeast = false;
-                $scope.recipe = {}; $scope.grainInRecipe = RecipeService.grainInRecipe; $scope.hopsInRecipe = RecipeService.hopsInRecipe; $scope.yeastInRecipe = RecipeService.yeastInRecipe; $scope.grainValues = RecipeService.grainValues; $scope.hopsValues = RecipeService.hopsValues; $scope.yeastValues = RecipeService.yeastValues; $scope.recipe.isPrivate = true;
-            }, function(err) {
-                var flashError = document.getElementById('flashError');
-                flashError.classList.toggle('active');
-                $timeout(function() {
-                    flashError.classList.toggle('active');
-                }, 3000);
-            });
-        };
 
-    });
+			$scope.$watch(function() {
+				cnt.recipeHasIngredients = cnt.recipe.grain.length || cnt.recipe.hops.length || cnt.recipe.yeast.length;
+				return cnt.recipeHasIngredients;
+			});
+
+		}
+
+		function showGrainData() {
+			setInitialIngredientsToShow();
+			cnt.ingredientToShow.arr  = cnt.initialGrainsToShow;
+			cnt.ingredientToShow.name = 'grain';
+			cnt.showGrainInRecipe     = true;
+			cnt.showHopsInRecipe      = cnt.showYeastInRecipe = false;
+			cnt.updateIngredientShown();
+		}
+
+		function showHopsData() {
+			setInitialIngredientsToShow();
+			cnt.ingredientToShow.arr  = cnt.initialHopsToShow;
+			cnt.ingredientToShow.name = 'hops';
+			cnt.showHopsInRecipe      = true;
+			cnt.showGrainInRecipe     = cnt.showYeastInRecipe = false;
+			cnt.updateIngredientShown();
+		}
+
+		function showYeastData() {
+			setInitialIngredientsToShow();
+			cnt.ingredientToShow.arr  = cnt.initialYeastToShow;
+			cnt.ingredientToShow.name = 'yeast';
+			cnt.showYeastInRecipe     = true;
+			cnt.showGrainInRecipe     = cnt.showGrainInRecipe = false;
+			cnt.updateIngredientShown();
+		}
+
+		function setInitialIngredientsToShow() {
+			cnt.initialGrainsToShow   = getIngredients.grain.slice(0, 9);
+			cnt.initialHopsToShow     = getIngredients.hops.slice(0, 9);
+			cnt.initialYeastToShow    = getIngredients.yeast.slice(0, 9);
+		}
+
+		function formatArrays() {
+			_.forEach(cnt.grainInDb, function(item) {
+				item.specs = [];
+				_.unset(item, '_id');
+				_.forIn(item, function(val, key) {
+					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+				});
+			});
+
+
+			_.forEach(cnt.hopsInDb, function(item) {
+				item.specs = [];
+				_.unset(item, '_id');
+				_.forIn(item, function(val, key) {
+					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+				});
+			});
+
+			_.forEach(cnt.yeastInDb, function(item) {
+				item.specs = [];
+				_.unset(item, '_id');
+				_.forIn(item, function(val, key) {
+					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+				});
+			});
+		}
+
+		function addIngredient(ingredient) {
+			switch (cnt.ingredientToShow.name) {
+				case 'grain':
+					RecipeService.addIngredient('grain', new Grain(ingredient.name, ingredient.lovibond, ingredient.sg, cnt.grain.amount));
+					break;
+				case 'hops':
+					RecipeService.addIngredient('hops', new Hops(ingredient.name, ingredient.alphaAcid, cnt.hops.boilTime, cnt.hops.amount));
+					break;
+				case 'yeast':
+					RecipeService.addIngredient('yeast', new Yeast(ingredient.name, (ingredient.maximumAttenuation + ingredient.minimumAttenuation) / 2));
+					break;
+					console.log(cnt.recipe)
+			}
+		}
+
+		function removeGrain(index) {
+			RecipeService.recipe.grain.splice(index, 1);
+		}
+
+		function removeHops(index) {
+			RecipeService.recipe.hops.splice(index, 1);
+		}
+
+		function removeYeast(index) {
+			RecipeService.recipe.yeast.splice(index, 1);
+		}
+
+		function updateIngredientShown() {
+			cnt.showGrain ? cnt.ingredientToShow.name = 'grain' : false;
+			cnt.showHops ? cnt.ingredientToShow.name = 'hops' : false;
+			cnt.showYeast ? cnt.ingredientToShow.name = 'yeast' : false;
+			cnt.ingredientFilter = '';
+		}
+
+		function saveRecipeToUser(recipe) {
+			var user = $scope.currentUser.id;
+			RecipeService.saveRecipeToUser(recipe, user).then(function(resp) {
+				console.log(resp);
+			});
+		}
+
+		function Grain(name, lovibond, sg, amount) {
+			this.name     = name;
+			this.lovibond = lovibond;
+			this.sg       = ((sg - 1) * 1000).toFixed(1);
+			this.amount   = amount;
+		}
+
+		function Hops(name, alphaAcid, boilTime, amount) {
+			this.name      = name;
+			this.alphaAcid = (alphaAcid / 100);
+			this.boilTime  = boilTime;
+			this.amount    = amount;
+		}
+
+		function Yeast(name, attenuation) {
+			this.name        = name;
+			this.attenuation = attenuation;
+		}
+
+		function loadMore() {
+			var arr             = cnt.ingredientToShow.arr;
+			var nextIngredients = [];
+			switch (cnt.ingredientToShow.name) {
+				case 'grain':
+					nextIngredients = cnt.grainInDb.slice(arr.length, (cnt.grainInDb.length - arr.length + 9));
+					break;
+				case 'hops':
+					nextIngredients = cnt.hopsInDb.slice(arr.length, (cnt.hopsInDb.length - arr.length + 9));
+					break;
+				case 'yeast':
+					nextIngredients = cnt.yeastInDb.slice(arr.length, (cnt.yeastInDb.length - arr.length + 9));
+					break;
+			}
+
+			cnt.ingredientToShow.arr.push(nextIngredients);
+			return cnt.ingredientToShow.arr = cnt.ingredientToShow.arr.reduce(function(a, b) {
+				return a.concat(b);
+			}, []);
+		}
+
+		return cnt;
+	}
 
 }());
 

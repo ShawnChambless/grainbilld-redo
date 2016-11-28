@@ -1,148 +1,138 @@
-(function () {
+(function() {
 	'use strict';
 
-angular.module('GrainBilld')
-	.service('RecipeService', function($http) {
-		this.grainInRecipe = [];
-		this.hopsInRecipe  = [];
-		this.yeastInRecipe = [];
-		this.grainValues   = { og: 0, fg: 0, srm: 0 };
-		this.hopsValues    = { ibu: 0 };
-		this.yeastValues   = { attenuation: 0, abv: 0 };
-		var self = this,
-			grainInRecipe = this.grainInRecipe,
-			hopsInRecipe = this.hopsInRecipe,
-			yeastInRecipe = this.yeastInRecipe,
-			grainValues = this.grainValues,
-			hopsValues = this.hopsValues,
-			yeastValues = this.yeastValues;
+	angular
+			.module('GrainBilld')
+			.service('RecipeService', recipeService);
 
-		this.getLatestCommunity = function() {
-			return $http.get('/api/recipes/latest').then(function(data) {
-				return data.data;
-			});
+	recipeService.$inject = [ '$http' ];
+
+	function recipeService($http) {
+		var recipe = {
+			name: ''
+			, size: 5
+			, grain: []
+			, hops: []
+			, yeast: []
+			, ibu: 0
+			, srm: 0
+			, og: 0
+			, fg: 0
+			, efficiency: 0.75
+			, abv: 0
+			, isPrivate: true
 		};
 
-		this.addIngredient = function(ingredientType, ingredient) {
-			switch(ingredientType) {
+		return {
+			recipe: recipe
+			, getLatestCommunity: getLatestCommunity
+			, addIngredient: addIngredient
+			, getAllIngredients: getAllIngredients
+			, saveRecipeToUser: saveRecipeToUser
+		};
+
+		function getLatestCommunity() {
+			return $http.get('/api/recipes/latest');
+		}
+
+		function addIngredient(ingredientType, ingredient) {
+			switch (ingredientType) {
 				case 'grain':
-					editGrainInRecipe(ingredient);
+					addGrainToRecipe(ingredient);
 					break;
 				case 'hops':
-					editHopsInRecipe(ingredient);
+					addHopsToRecipe(ingredient);
 					break;
 				case 'yeast':
-					editYeastInRecipe(ingredient);
+					addYeastToRecipe(ingredient);
 					break;
 			}
-		};
+			console.log(recipe)
+		}
 
-		this.getAllIngredients = function() {
+		function getAllIngredients() {
 			return $http.get('/api/ingredients/all');
-		};
+		}
 
-		function editGrainInRecipe(grain) {
-			grainInRecipe.push({
-				name: grain.name,
-				lovibond: grain.lovibond,
-				sg: ((grain.sg - 1) * 1000).toFixed(1),
-				amount: 5,
-				description: grain.description
-			});
+		function addGrainToRecipe(grain) {
+			recipe.grain.push(grain);
 			calcGrainTotals();
 		}
 
-		function editHopsInRecipe(hops) {
-			hopsInRecipe.push({
-				name: hops.name,
-				alphaAcid: (hops.alphaAcid / 100),
-				amount: 1,
-				boilTime: 10,
-				description: hops.description
-			});
+		function addHopsToRecipe(hops) {
+			recipe.hops.push(hops);
 			calcHopsTotals();
 		}
 
-		function editYeastInRecipe(yeast) {
-			yeastInRecipe.push({
-				name: yeast.name,
-				attenuation: ((yeast.minimumAttenuation + yeast.maximumAttenuation) / 2),
-				description: yeast.description
-			});
+		function addYeastToRecipe(yeast) {
+			recipe.yeast.push(yeast);
 			calcYeastTotals();
 		}
 
 		function calcGrainTotals() {
-			var efficiency = 0.75;
-			var batchSize = 5;
-			grainValues.og = calcOG(batchSize, efficiency);
-			grainValues.srm = calcSRM(batchSize);
+			recipe.og  = calcOG();
+			recipe.srm = calcSRM(recipe.size);
 		}
 
 		function calcHopsTotals() {
-			hopsValues.ibu = 0;
-			hopsValues.ibu = calcIBU();
+			recipe.ibu = 0;
+			recipe.ibu = calcIBU();
 		}
 
 		function calcYeastTotals() {
-			grainValues.fg = calcFG(grainValues.og, yeastValues.attenuation);
-			yeastValues.abv = calcABV(grainValues.og, grainValues.fg);
+			recipe.fg  = calcFG(recipe.og);
+			recipe.abv = calcABV(recipe.og, recipe.fg);
 		}
 
-		function calcOG(batchSize, efficiency) {
+		function calcOG() {
 			var grainSg = [];
-			grainInRecipe.map(function(item) {
+			_.map(recipe.grain, (function(item) {
 				var sgOfItem = (parseFloat(item.sg) / 1000);
-				var totalSg = (((sgOfItem * item.amount) * efficiency) / batchSize);
+				var totalSg  = (((sgOfItem * item.amount) * recipe.efficiency) / recipe.size);
 				return grainSg.push(totalSg);
-			});
-			grainSg = grainSg.reduce(function(a, b) {
+			}));
+			var final = grainSg.reduce(function(a, b) {
 				return (a + b);
 			});
-			return (1 + grainSg).toFixed(3);
+			return (1 + final).toFixed(3);
 		}
 
 		function calcFG(og) {
-			var fg =  yeastInRecipe.map(function(item) {
+			var fg = recipe.yeast.map(function(item) {
 				var initial = ((og - 1) * (1 - (item.attenuation / 100))) + 1;
 				return Math.round(initial * 1000) / 1000;
 			});
 			return parseFloat(fg);
 		}
 
-		function calcSRM(batchSize) {
-			var srm = 0;
-			srm = grainInRecipe.map(function(item) {
-				var mcu = ((item.lovibond * item.amount) / batchSize);
+		function calcSRM() {
+			return recipe.grain.map(function(item) {
+				var mcu = ((item.lovibond * item.amount) / recipe.size);
 				return 1.4922 * (Math.pow(mcu, 0.6859));
 			}).reduce(function(a, b) {
 				return a + b;
-			});
-			return srm.toFixed(2);
+			}).toFixed(2);
 		}
 
-		function calcIBU(hops) {
-			var batchSize = 5,
-				ibu = hopsInRecipe.map(function(item) {
-					var utilization = findHopUtilization(item.boilTime);
-					return parseFloat(((item.alphaAcid * utilization * 74.89 / batchSize) * 100).toFixed(1));
-				})
+		function calcIBU() {
+			return parseFloat(recipe.hops.map(function(item) {
+				var utilization = findHopUtilization(item.boilTime);
+				return parseFloat(((item.alphaAcid * utilization * 74.89 / recipe.size) * 100).toFixed(1));
+			})
 					.reduce(function(a, b) {
 						return a + b;
-					});
-			console.log(hopsInRecipe, ibu);
-			return parseFloat(ibu);
+					}));
 		}
 
 		function calcABV(og, fg) {
 			return ((og - fg) * 131).toFixed(2);
 		}
 
-		function findHopUtilization (boilTime){
+		function findHopUtilization(boilTime) {
 			var hopUtilization = 0;
-			if(boilTime === 0) hopUtilization = 0;
-			else if (boilTime > 0  && boilTime <= 9)  hopUtilization = 0.05;
-			else if (boilTime > 9  && boilTime <= 19) hopUtilization = 0.12;
+			if (boilTime === 0) hopUtilization = 0;
+			else if (boilTime > 0 && boilTime <= 9) hopUtilization = 0.05;
+			else if (boilTime > 9 && boilTime <= 19) hopUtilization = 0.12;
 			else if (boilTime > 19 && boilTime <= 29) hopUtilization = 0.15;
 			else if (boilTime > 29 && boilTime <= 44) hopUtilization = 0.19;
 			else if (boilTime > 44 && boilTime <= 59) hopUtilization = 0.22;
@@ -151,7 +141,7 @@ angular.module('GrainBilld')
 			return hopUtilization;
 		}
 
-		this.saveRecipeToUser = function(recipe, user) {
+		function saveRecipeToUser(recipe, user) {
 			return $http({
 				method: 'POST',
 				url: 'api/users/newRecipe',
@@ -159,9 +149,9 @@ angular.module('GrainBilld')
 					recipe: {
 						user: user,
 						name: recipe.name,
-						grain: this.grainInRecipe,
-						hops: this.hopsInRecipe,
-						yeast: this.yeastInRecipe,
+						grain: recipe.grain,
+						hops: recipe.hops,
+						yeast: recipe.yeast,
 						batchSize: recipe.batchSize,
 						projectedEfficiency: recipe.efficiency,
 						isPrivate: recipe.isPrivate
@@ -169,17 +159,14 @@ angular.module('GrainBilld')
 				}
 			}).then(function(resp) {
 				return (
-					this.grainInRecipe = [],
-						this.hopsInRecipe  = [],
-						this.yeastInRecipe = [],
-						this.grainValues   = { og: 0, fg: 0, srm: 0 },
-						this.hopsValues    = { ibu: 0 },
-						this.yeastValues   = { attenuation: 0, abv: 0 },
-						resp.data
+						recipe.grain = []
+								, recipe.hops = []
+								, recipe.yeast = []
+								, resp.data
 				);
 			}.bind(this));
-		};
-	});
+		}
+	}
 
 }());
 

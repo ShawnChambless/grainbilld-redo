@@ -1,43 +1,10 @@
-<header class="navigation" role="banner">
-  <div class="navigation-wrapper">
-    <a ng-href="#" class="logo">
-      <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/placeholder_square.png" alt="Logo Image">
-    </a>
-    <a ng-href="#" class="navigation-menu-button" id="js-mobile-menu">MENU</a>
-    <nav role="navigation">
-      <ul id="js-navigation-menu" class="navigation-menu show">
-        <li class="nav-link"><a ng-href="#">Products</a></li>
-        <li class="nav-link"><a ng-href="#">About Us</a></li>
-        <li class="nav-link"><a ng-href="#">Contact</a></li>
-        <li id="js-navigation-more" class="nav-link more"><a ng-href="#">More</a>
-          <ul class="submenu">
-            <li><a ng-href="#">Submenu Item</a></li>
-            <li><a ng-href="#">Another Item</a></li>
-            <li class="more"><a ng-href="#">Item with submenu</a>
-              <ul class="submenu">
-                <li><a ng-href="#">Sub-submenu Item</a></li>
-                <li><a ng-href="#">Another Item</a></li>
-              </ul>
-            </li>
-            <li class="more"><a ng-href="#">Another submenu</a>
-              <ul class="submenu">
-                <li><a ng-href="#">Sub-submenu</a></li>
-                <li><a ng-href="#">An Item</a></li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+<nav class="blue-grey darken-1">
+    <div class="nav-wrapper">
+      <a ui-sref="home" class="brand-logo">Logo</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a ui-sref="newBeer">New Brew</a></li>
+        <li><a ui-sref="public">User Submitted</a></li>
+        <li><a ui-sref="ingredients">Ingredients</a></li>
       </ul>
-    </nav>
-    <div class="navigation-tools">
-      <div class="search-bar">
-        <form role="search">
-          <input type="search" placeholder="Enter Search" />
-          <button type="submit">
-            <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/search-icon.png" alt="Search Icon">
-          </button>
-        </form>
-      </div>
     </div>
-  </div>
-</header>
+  </nav>

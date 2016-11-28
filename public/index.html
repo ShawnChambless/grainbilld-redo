@@ -4,16 +4,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>Grain Billd</title>
     <link rel="stylesheet" href="dist/styles/main.css">
   </head>
   <body ng-app='GrainBilld'>
+		<div ng-include="'app/templates/nav.template.html'"></div>
 
-    <nav-dir></nav-dir> 
 
-    <ui-view></ui-view>
+		<div class="container">
+      <ui-view></ui-view>
+		</div>
 
-   
+
     <script src="dist/app/scripts.min.js" charset="utf-8"></script>
   </body>
 </html>

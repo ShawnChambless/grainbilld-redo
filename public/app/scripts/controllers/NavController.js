@@ -1,6 +1,17 @@
-angular.module('GrainBilld')
-.controller('NavController', function($scope, UserService) {
+(function() {
+	'use strict';
 
-	$scope.currentNavItem = 'home';
+	angular
+			.module('GrainBilld')
+			.controller('NavController', navController);
 
-});
+	navController.$inject = [ 'UserService' ];
+
+	function navController(UserService) {
+
+
+
+	}
+
+}());
+

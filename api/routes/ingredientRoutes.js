@@ -1,18 +1,22 @@
-var express             = require('express'),
-    IngredientRouter    = express.Router(),
-    GrainCtrl           = require( './../controllers/GrainCtrl' ),
-    HopsCtrl            = require( './../controllers/HopsCtrl' ),
-    YeastCtrl           = require( './../controllers/YeastCtrl' ),
-    IngredientCtrl      = require( './../controllers/IngredientCtrl' );
+(function() {
+	'use strict';
 
-IngredientRouter
-    .get ( '/grain',        GrainCtrl.getGrain)
-    .post( '/grain',        GrainCtrl.addGrain)
-    .put ( '/grain/:_id/',  GrainCtrl.updateGrain)
-    .get ( '/hops',         HopsCtrl.getHops)
-    .post( '/hops',         HopsCtrl.addHops)
-    .get ( '/yeast',        YeastCtrl.getYeast)
-    .post( '/yeast',        YeastCtrl.addYeast)
-    .get ( '/all',          IngredientCtrl.getAllIngredients);
+	const express          = require('express'),
+				IngredientRouter = express.Router(),
+				IngredientCtrl   = require('./../controllers/IngredientCtrl');
 
-module.exports = IngredientRouter;
+	IngredientRouter
+			.get('/grain', IngredientCtrl.getGrain)
+			.post('/grain', IngredientCtrl.addGrain)
+			.put('/grain/:_id', IngredientCtrl.updateGrain)
+			.get('/hops', IngredientCtrl.getHops)
+			.post('/hops', IngredientCtrl.addHops)
+			.get('/yeast', IngredientCtrl.getYeast)
+			.post('/yeast', IngredientCtrl.addYeast)
+			.get('/all', IngredientCtrl.getAllIngredients);
+
+	module.exports = IngredientRouter;
+
+}());
+
+
