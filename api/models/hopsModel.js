@@ -19,3 +19,5 @@ var hopsSchema = {
 };
 
 module.exports = new mongoose.Schema(hopsSchema, { collection: 'hops' });
+
+/// TODO refactor

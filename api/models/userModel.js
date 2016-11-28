@@ -11,3 +11,6 @@ var userSchema = {
 };
 
 module.exports = new mongoose.Schema( userSchema );
+
+
+/// TODO refactor
