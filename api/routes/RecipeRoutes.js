@@ -1,10 +1,15 @@
-var express      = require('express'),
-		RecipeRouter = express.Router(),
-		RecipeCtrl   = require('./../controllers/RecipeCtrl');
+(function() {
+	'use strict';
 
-RecipeRouter
-		.get('/api/recipes/community', RecipeCtrl.getCommunityRecipes)
-		.get('/api/recipes', RecipeCtrl.getRecipeTotals)
-		.get('/api/recipes/latest', RecipeCtrl.getLatestCommunityRecipes);
+	const express      = require('express'),
+				RecipeRouter = express.Router(),
+				RecipeCtrl   = require('./../controllers/RecipeCtrl');
 
-module.exports = RecipeRouter;
+	RecipeRouter
+			.get('/community', RecipeCtrl.getCommunityRecipes)
+			.get('/', RecipeCtrl.getRecipeTotals)
+			.get('/latest', RecipeCtrl.getLatestCommunityRecipes);
+
+	module.exports = RecipeRouter;
+
+}());

@@ -32,9 +32,7 @@
 		};
 
 		function getLatestCommunity() {
-			return $http.get('/api/recipes/latest').then(function(data) {
-				return data.data;
-			});
+			return $http.get('/api/recipes/latest');
 		}
 
 		function addIngredient(ingredientType, ingredient) {

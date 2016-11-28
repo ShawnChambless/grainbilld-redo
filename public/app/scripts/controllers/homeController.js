@@ -5,26 +5,17 @@
 			.module('GrainBilld')
 			.controller('HomeController', homeController);
 
-	homeController.$inject = [ 'HomeService', 'RecipeService' ];
+	homeController.$inject = [ 'HomeService', 'RecipeService', 'latestRecipes' ];
 
-	function homeController(HomeService, RecipeService) {
+	function homeController(HomeService, RecipeService, latestRecipes) {
 
 		var cnt = this;
 
 		function init() {
-			cnt.getLatestCommunity = getLatestCommunity;
-
-			cnt.getLatestCommunity();
+			cnt.latestCommunity = latestRecipes;
 		}
 
 		init();
-
-
-		function getLatestCommunity() {
-			RecipeService.getLatestCommunity().then(function(data) {
-				$scope.latestCommunity = data;
-			});
-		}
 
 		return cnt;
 
