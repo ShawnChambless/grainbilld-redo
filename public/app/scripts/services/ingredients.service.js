@@ -10,7 +10,6 @@
 	function ingredientService($http) {
 		return {
 			ingredients: {}
-
 			, getAllIngredients: getAllIngredients
 		};
 
