@@ -47,6 +47,20 @@
 									});
 						}
 					}
+				})
+
+				.state('profile', {
+					url: '/Profile'
+					, controller: 'UserController as cnt'
+					, templateUrl: 'app/templates/user.template.html'
+					, resolve: {
+						user: function(UserService) {
+							return UserService.getUser()
+									.then(function(data) {
+										return data.data;
+									});
+						}
+					}
 				});
 
 	}

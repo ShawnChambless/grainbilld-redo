@@ -15,7 +15,7 @@
 		newRecipe(req, res) {
 			let recipeId
 					, recipeName;
-			Recipe.create(req.body.recipe).then((err, newRecipe) => {
+			Recipe.createUser(req.body.recipe).then((err, newRecipe) => {
 				if (err) return res.status(500).json(err);
 				recipeId   = newRecipe._id;
 				recipeName = newRecipe.name;

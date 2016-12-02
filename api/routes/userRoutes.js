@@ -8,13 +8,13 @@
 
 
 	UserRouter
-			.post('/api/users', userCtrl.create)
+			.post('/api/users', userCtrl.createUser)
 			.get('/api/users/getUser', userCtrl.getCurrentUser)
 			.get('/api/user/recipes/:userId', userCtrl.getRecipes)
-			.put('/api/user/recipes/remove', recipeCtrl.removeRecipe)
-			.put('/api/users/:user_id', userCtrl.update)
+			.put('/api/user/recipes/removeUser', recipeCtrl.removeRecipe)
+			.put('/api/users/:user_id', userCtrl.updateUser)
 			.post('/api/users/newRecipe', recipeCtrl.newRecipe)
-			.delete('/api/users/:user_id', userCtrl.remove);
+			.delete('/api/users/:user_id', userCtrl.removeUser);
 
 	module.exports = UserRouter;
 
