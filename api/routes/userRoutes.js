@@ -15,6 +15,8 @@
 			.put('/api/users/:user_id', userCtrl.updateUser)
 
 			.post('/api/users', userCtrl.createUser)
+
+			//TODO move this to recipeRoutes
 			.post('/api/users/newRecipe', recipeCtrl.newRecipe)
 
 			.delete('/api/users/favorites/remove:id', userCtrl.removeFavorite)

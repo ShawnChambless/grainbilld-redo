@@ -7,13 +7,15 @@
 
 	IngredientRouter
 			.get('/grain', ingredientCtrl.getGrain)
-			.post('/grain', ingredientCtrl.addGrain)
-			.put('/grain/:_id', ingredientCtrl.updateGrain)
 			.get('/hops', ingredientCtrl.getHops)
-			.post('/hops', ingredientCtrl.addHops)
 			.get('/yeast', ingredientCtrl.getYeast)
-			.post('/yeast', ingredientCtrl.addYeast)
-			.get('/all', ingredientCtrl.getAllIngredients);
+			.get('/all', ingredientCtrl.getAllIngredients)
+
+			.put('/grain/:_id', ingredientCtrl.updateGrain)
+
+			.post('/grain', ingredientCtrl.addGrain)
+			.post('/hops', ingredientCtrl.addHops)
+			.post('/yeast', ingredientCtrl.addYeast);
 
 	module.exports = IngredientRouter;
 
