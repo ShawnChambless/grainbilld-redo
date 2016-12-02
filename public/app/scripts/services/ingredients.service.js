@@ -15,8 +15,8 @@
 
 		function getAllIngredients() {
 			return $http.get('/api/ingredients/all')
-					.then(function(ingredients) {
-						this.ingredients = ingredients.data;
+					.then(function(resp) {
+						return resp.data;
 					});
 		}
 

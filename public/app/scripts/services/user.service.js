@@ -11,6 +11,9 @@ function userService($http) {
 
 	function getUser() {
 		return $http.get('/api/users/getUser')
+				.then(function(resp) {
+					return resp.data;
+				});
 	}
 
 	function removeFavorite(id) {

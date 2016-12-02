@@ -10,13 +10,12 @@
 	UserRouter
 			.get('/api/user/recipes/:userId', userCtrl.getRecipes)
 			.get('/api/users/getUser', userCtrl.getCurrentUser)
+			.get('/api/users/favorites', userCtrl.getFavorites)
 
 			.put('/api/user/recipes/removeUser', recipeCtrl.removeRecipe)
 			.put('/api/users/:user_id', userCtrl.updateUser)
 
 			.post('/api/users', userCtrl.createUser)
-
-			//TODO move this to recipeRoutes
 			.post('/api/users/newRecipe', recipeCtrl.newRecipe)
 
 			.delete('/api/users/favorites/remove:id', userCtrl.removeFavorite)

@@ -5,9 +5,9 @@
 			.module('GrainBilld')
 			.controller('NewBeerController', newBeerController);
 
-	newBeerController.$inject = [ '$scope', 'RecipeService', 'IngredientsService', 'getIngredients', '$timeout' ];
+	newBeerController.$inject = [ '$scope', 'RecipeService', 'IngredientService', 'ingredients', '$timeout' ];
 
-	function newBeerController($scope, RecipeService, IngredientsService, getIngredients, $timeout) {
+	function newBeerController($scope, RecipeService, IngredientService, ingredients, $timeout) {
 
 		var cnt = this;
 
@@ -16,12 +16,12 @@
 		cnt.init();
 
 		function init() {
-			cnt.grainInDb             = getIngredients.grain;
-			cnt.hopsInDb              = getIngredients.hops;
-			cnt.yeastInDb             = getIngredients.yeast;
-			cnt.initialGrainsToShow   = getIngredients.grain.slice(0, 9);
-			cnt.initialHopsToShow     = getIngredients.hops.slice(0, 9);
-			cnt.initialYeastToShow    = getIngredients.yeast.slice(0, 9);
+			cnt.grainInDb             = ingredients.grain;
+			cnt.hopsInDb              = ingredients.hops;
+			cnt.yeastInDb             = ingredients.yeast;
+			cnt.initialGrainsToShow   = ingredients.grain.slice(0, 9);
+			cnt.initialHopsToShow     = ingredients.hops.slice(0, 9);
+			cnt.initialYeastToShow    = ingredients.yeast.slice(0, 9);
 			cnt.ingredientToShow      = { name: 'grain', arr: cnt.initialGrainsToShow };
 			cnt.updateIngredientShown = updateIngredientShown;
 			cnt.showGrainData         = showGrainData;
@@ -77,9 +77,9 @@
 		}
 
 		function setInitialIngredientsToShow() {
-			cnt.initialGrainsToShow   = getIngredients.grain.slice(0, 9);
-			cnt.initialHopsToShow     = getIngredients.hops.slice(0, 9);
-			cnt.initialYeastToShow    = getIngredients.yeast.slice(0, 9);
+			cnt.initialGrainsToShow   = ingredients.grain.slice(0, 9);
+			cnt.initialHopsToShow     = ingredients.hops.slice(0, 9);
+			cnt.initialYeastToShow    = ingredients.yeast.slice(0, 9);
 		}
 
 		function formatArrays() {

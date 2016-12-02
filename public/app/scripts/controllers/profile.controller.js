@@ -5,7 +5,7 @@
 			.module('GrainBilld')
 			.controller('profileController', profileController);
 
-	profileController.$inject = [ 'UserService', user ];
+	profileController.$inject = [ 'UserService', 'user' ];
 
 	function profileController(UserService, user) {
 		var cnt = this;

@@ -17,7 +17,7 @@
 	function config($stateProvider, $urlRouterProvider) {
 
 		$urlRouterProvider
-				.otherwise('/Home');
+				.otherwise('/NewBeer');
 
 		$stateProvider
 
@@ -29,7 +29,7 @@
 						latestRecipes: function(RecipeService) {
 							return RecipeService.getLatestCommunity()
 									.then(function(data) {
-										return data.data;
+										return data;
 									})
 						}
 					}
@@ -40,8 +40,8 @@
 					, controller: 'NewBeerController as cnt'
 					, templateUrl: 'app/templates/newBeer.template.html'
 					, resolve: {
-						getIngredients: function(IngredientsService) {
-							return IngredientsService.getAllIngredients()
+						ingredients: function(IngredientService) {
+							return IngredientService.getAllIngredients()
 									.then(function(data) {
 										return data;
 									});
@@ -57,7 +57,7 @@
 						user: function(UserService) {
 							return UserService.getUser()
 									.then(function(data) {
-										return data.data;
+										return data;
 									});
 						}
 					}

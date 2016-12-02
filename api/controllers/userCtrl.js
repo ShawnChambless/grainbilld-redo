@@ -54,7 +54,6 @@ function getCurrentUser(req, res) {
 	else return res.json('');
 }
 
-//TODO add route for getFavorites
 function getFavorites(req, res) {
 	User
 			.findById(req.params.user_id)
