@@ -13,7 +13,6 @@ function userService($http) {
 		return $http.get('/api/users/getUser')
 	}
 
-	//TODO add endpoint for removing favorite
 	function removeFavorite(id) {
 		return $http.delete('/api/users/favorites/' + id)
 				.then(function(resp) {

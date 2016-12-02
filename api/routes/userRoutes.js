@@ -14,6 +14,7 @@
 			.put('/api/user/recipes/removeUser', recipeCtrl.removeRecipe)
 			.put('/api/users/:user_id', userCtrl.updateUser)
 			.post('/api/users/newRecipe', recipeCtrl.newRecipe)
+			.delete('/api/users/favorites/remove:id', userCtrl.removeFavorite)
 			.delete('/api/users/:user_id', userCtrl.removeUser);
 
 	module.exports = UserRouter;
