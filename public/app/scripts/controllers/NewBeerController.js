@@ -5,9 +5,9 @@
 			.module('GrainBilld')
 			.controller('NewBeerController', newBeerController);
 
-	newBeerController.$inject = [ '$scope', 'RecipeService', 'getIngredients', '$timeout' ];
+	newBeerController.$inject = [ '$scope', 'RecipeService', 'IngredientsService', 'getIngredients', '$timeout' ];
 
-	function newBeerController($scope, RecipeService, getIngredients, $timeout) {
+	function newBeerController($scope, RecipeService, IngredientsService, getIngredients, $timeout) {
 
 		var cnt = this;
 

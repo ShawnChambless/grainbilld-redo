@@ -1,48 +1,55 @@
 (function() {
 	'use strict';
 
-	angular.module('GrainBilld', [ 'ui.router', 'infinite-scroll', 'ngSanitize' ])
+	angular
+			.module('GrainBilld', [ 'ui.router', 'infinite-scroll', 'ngSanitize' ])
+			.run(run)
+			.config(config);
 
-			.run(function() {
-				document.addEventListener('DOMContentLoaded', function() {
-					FastClick.attach(document.body);
-				}, false);
-			})
+	config.$inject = [ '$stateProvider', '$urlRouterProvider' ];
 
-			.config(function($stateProvider, $urlRouterProvider) {
+	function run() {
+		document.addEventListener('DOMContentLoaded', function() {
+			FastClick.attach(document.body);
+		}, false);
+	}
 
-				$urlRouterProvider.otherwise('/NewBeer');
+	function config($stateProvider, $urlRouterProvider) {
 
-				$stateProvider
+		$urlRouterProvider
+				.otherwise('/Home');
 
-						.state('home', {
-							url: '/Home'
-							, controller: 'HomeController as cnt'
-							, templateUrl: 'app/templates/home.template.html'
-							, resolve: {
-								latestRecipes: function(RecipeService) {
-									return RecipeService.getLatestCommunity()
-											.then(function(data) {
-												return data.data;
-											})
-								}
-							}
-						})
+		$stateProvider
 
-						.state('newBeer', {
-							url: '/NewBeer'
-							, controller: 'NewBeerController as cnt'
-							, templateUrl: 'app/templates/newBeer.template.html'
-							, resolve: {
-								getIngredients: function(RecipeService) {
-									return RecipeService.getAllIngredients().then(function(data) {
+				.state('home', {
+					url: '/Home'
+					, controller: 'HomeController as cnt'
+					, templateUrl: 'app/templates/home.template.html'
+					, resolve: {
+						latestRecipes: function(RecipeService) {
+							return RecipeService.getLatestCommunity()
+									.then(function(data) {
 										return data.data;
-									});
-								}
-							}
-						});
+									})
+						}
+					}
+				})
 
-			});
+				.state('newBeer', {
+					url: '/NewBeer'
+					, controller: 'NewBeerController as cnt'
+					, templateUrl: 'app/templates/newBeer.template.html'
+					, resolve: {
+						getIngredients: function(IngredientsService) {
+							return IngredientsService.getAllIngredients()
+									.then(function(data) {
+										return data;
+									});
+						}
+					}
+				});
+
+	}
 
 }());
 

@@ -3,7 +3,6 @@
 
 	const mongoose     = require('mongoose'),
 				User         = require('./userModel'),
-				moment       = require('moment')().local().format("dddd, MMMM Do YYYY, h:mm a Z"),
 
 				recipeSchema = {
 					user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -15,7 +14,7 @@
 					projectedEfficiency: { type: Number },
 					actualEfficiency: { type: Number },
 					isPrivate: { type: Boolean, default: true },
-					dateCreated: { type: String, default: moment }
+					dateCreated: { type: String, default: Date.now() }
 				};
 
 	module.exports = new mongoose.Schema(recipeSchema);

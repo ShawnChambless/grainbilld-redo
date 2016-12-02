@@ -27,7 +27,6 @@
 			recipe: recipe
 			, getLatestCommunity: getLatestCommunity
 			, addIngredient: addIngredient
-			, getAllIngredients: getAllIngredients
 			, saveRecipeToUser: saveRecipeToUser
 		};
 
@@ -48,10 +47,6 @@
 					break;
 			}
 			console.log(recipe)
-		}
-
-		function getAllIngredients() {
-			return $http.get('/api/ingredients/all');
 		}
 
 		function addGrainToRecipe(grain) {

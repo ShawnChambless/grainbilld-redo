@@ -3,17 +3,17 @@
 
 	const express          = require('express'),
 				IngredientRouter = express.Router(),
-				IngredientCtrl   = require('./../controllers/IngredientCtrl');
+				ingredientCtrl   = require('./../controllers/ingredientCtrl');
 
 	IngredientRouter
-			.get('/grain', IngredientCtrl.getGrain)
-			.post('/grain', IngredientCtrl.addGrain)
-			.put('/grain/:_id', IngredientCtrl.updateGrain)
-			.get('/hops', IngredientCtrl.getHops)
-			.post('/hops', IngredientCtrl.addHops)
-			.get('/yeast', IngredientCtrl.getYeast)
-			.post('/yeast', IngredientCtrl.addYeast)
-			.get('/all', IngredientCtrl.getAllIngredients);
+			.get('/grain', ingredientCtrl.getGrain)
+			.post('/grain', ingredientCtrl.addGrain)
+			.put('/grain/:_id', ingredientCtrl.updateGrain)
+			.get('/hops', ingredientCtrl.getHops)
+			.post('/hops', ingredientCtrl.addHops)
+			.get('/yeast', ingredientCtrl.getYeast)
+			.post('/yeast', ingredientCtrl.addYeast)
+			.get('/all', ingredientCtrl.getAllIngredients);
 
 	module.exports = IngredientRouter;
 

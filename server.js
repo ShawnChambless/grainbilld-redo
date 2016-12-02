@@ -7,12 +7,11 @@
 			, mongoose         = require('mongoose')
 			, passport         = require('./api/passport/config')
 			, compression      = require('compression')
-			, UserCtrl         = require('./api/controllers/UserCtrl')
-			, IngredientRoutes = require('./api/routes/IngredientRoutes')
-			, RecipeRoutes     = require('./api/routes/RecipeRoutes')
-			, UserRoutes       = require('./api/routes/UserRoutes')
-			, AuthRoutes       = require('./api/routes/AuthRoutes')
-			, moment           = require('moment')
+			, userCtrl         = require('./api/controllers/userCtrl')
+			, IngredientRoutes = require('./api/routes/ingredientRoutes')
+			, RecipeRoutes     = require('./api/routes/recipeRoutes')
+			, UserRoutes       = require('./api/routes/userRoutes')
+			, AuthRoutes       = require('./api/routes/authRoutes')
 			, port             = process.argv[ 2 ] || 8080
 			, app              = express();
 
