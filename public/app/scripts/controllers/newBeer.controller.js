@@ -41,7 +41,6 @@
 			setInitialIngredientsToShow();
 
 
-
 			$scope.$watch(function() {
 				cnt.recipeHasIngredients = cnt.recipe.grain.length || cnt.recipe.hops.length || cnt.recipe.yeast.length;
 				return cnt.recipeHasIngredients;
@@ -77,9 +76,9 @@
 		}
 
 		function setInitialIngredientsToShow() {
-			cnt.initialGrainsToShow   = ingredients.grain.slice(0, 9);
-			cnt.initialHopsToShow     = ingredients.hops.slice(0, 9);
-			cnt.initialYeastToShow    = ingredients.yeast.slice(0, 9);
+			cnt.initialGrainsToShow = ingredients.grain.slice(0, 9);
+			cnt.initialHopsToShow   = ingredients.hops.slice(0, 9);
+			cnt.initialYeastToShow  = ingredients.yeast.slice(0, 9);
 		}
 
 		function formatArrays() {
@@ -87,7 +86,7 @@
 				item.specs = [];
 				_.unset(item, '_id');
 				_.forIn(item, function(val, key) {
-					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+					if (key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
 				});
 			});
 
@@ -96,7 +95,7 @@
 				item.specs = [];
 				_.unset(item, '_id');
 				_.forIn(item, function(val, key) {
-					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+					if (key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
 				});
 			});
 
@@ -104,24 +103,33 @@
 				item.specs = [];
 				_.unset(item, '_id');
 				_.forIn(item, function(val, key) {
-					if(key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
+					if (key != 'specs' && key != 'name') item.specs.push(_.capitalize(key) + ': ' + val)
 				});
 			});
 		}
 
 		function addIngredient(ingredient) {
+			var amount;
+
 			switch (cnt.ingredientToShow.name) {
 				case 'grain':
 					RecipeService.addIngredient('grain', new Grain(ingredient.name, ingredient.lovibond, ingredient.sg, cnt.grain.amount));
+					amount = cnt.grain.amount + 'lbs';
 					break;
 				case 'hops':
 					RecipeService.addIngredient('hops', new Hops(ingredient.name, ingredient.alphaAcid, cnt.hops.boilTime, cnt.hops.amount));
+					amount = cnt.hops.amount + 'oz';
 					break;
 				case 'yeast':
 					RecipeService.addIngredient('yeast', new Yeast(ingredient.name, (ingredient.maximumAttenuation + ingredient.minimumAttenuation) / 2));
+					amount = 1;
 					break;
 					console.log(cnt.recipe)
 			}
+
+			var name    = cnt.recipe.name || 'your recipe'
+					, message = 'Added ' + amount + ' ' + ingredient.name + ' to ' + name;
+			Materialize.toast(message, 2500, 'light-blue lighten-1');
 		}
 
 		function removeGrain(index) {

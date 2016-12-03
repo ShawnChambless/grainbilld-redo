@@ -9,14 +9,14 @@ const gulp    = require('gulp')
 		, paths   = {
 	scss: [ 'public/app/styles/**/*.scss' ]
 	, scripts: [
-		'public/node_modules/jquery/dist/jquery.js'
-		, 'public/node_modules/materialize-css/dist/js/materialize.js'
-		, 'public/node_modules/fastclick/lib/fastclick.js'
-		, 'public/node_modules/angular/angular.js'
-			, 'public/node_modules/angular-sanitize/angular-sanitize.js'
-		, 'public/node_modules/angular-ui-router/release/angular-ui-router.js'
-		, 'public/node_modules/ng-infinite-scroll/build/ng-infinite-scroll.js'
-		, 'public/node_modules/lodash/lodash.js'
+		'public/node_modules/jquery/dist/jquery.min.js'
+		, 'public/node_modules/materialize-css/dist/js/materialize.min.js'
+		, 'public/node_modules/fastclick/lib/fastclick.min.js'
+		, 'public/node_modules/angular/angular.min.js'
+			, 'public/node_modules/angular-sanitize/angular-sanitize.min.js'
+		, 'public/node_modules/angular-ui-router/release/angular-ui-router.min.js'
+		, 'public/node_modules/ng-infinite-scroll/build/ng-infinite-scroll.min.js'
+		, 'public/node_modules/lodash/lodash.min.js'
 		, 'public/app/**/*.js'
 	]
 };
